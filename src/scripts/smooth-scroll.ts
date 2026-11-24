@@ -3,13 +3,11 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { prefersReducedMotion } from './motion';
 import { setBottleVisible } from './bottle';
+import { bindScrollEngine, setScrollLocked } from './scroll-lock';
 
 let lenis: Lenis | undefined;
 
-export function setScrollLocked(locked: boolean) {
-  if (locked) lenis?.stop();
-  else lenis?.start();
-}
+export { setScrollLocked };
 
 // Salto a un capítulo sin enseñar lo de en medio: la botella se esconde mientras el scroll cruza el recorrido
 // (el timeline la deja en el estado de destino) y vuelve al llegar.
@@ -22,6 +20,7 @@ export function startSmoothScroll() {
   if (prefersReducedMotion()) return;
 
   lenis = new Lenis({ lerp: 0.1 });
+  bindScrollEngine(lenis);
   lenis.on('scroll', ScrollTrigger.update);
   gsap.ticker.add((time) => lenis.raf(time * 1000));
   gsap.ticker.lagSmoothing(0);

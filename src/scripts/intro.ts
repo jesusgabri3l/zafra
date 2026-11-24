@@ -1,7 +1,7 @@
 import { gsap } from 'gsap';
 import { bumpBottle, intro, stage } from './bottle';
 import { prefersReducedMotion } from './motion';
-import { setScrollLocked } from './smooth-scroll';
+import { setScrollLocked } from './scroll-lock';
 
 // Sin loader: mientras carga (fuentes + frutas del hero decodificadas) se ve el campo maracuyá liso. Cuando todo está listo
 // arranca la intro por tiempo (~1,7 s): letras en burbujas, la botella cae a la cresta, la maracuyá cae y se parte, entra la chapa.

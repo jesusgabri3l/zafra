@@ -1,51 +1,67 @@
 import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { startSmoothScroll } from './smooth-scroll';
-import { startNavbarTone } from './navbar-tone';
 import { startBottle } from './bottle';
-import { startOrder } from './order';
-import { startNotes } from './notes';
 import { startSpout } from './spout';
-import { startStory, syncHeroStage } from './story';
 import { startReducedBottle } from './reduced';
 import { startIntro } from './intro';
 import { prefersReducedMotion } from './motion';
 import { trackSections } from './analytics';
-
-gsap.registerPlugin(ScrollTrigger);
-ScrollTrigger.config({ ignoreMobileResize: true });
+import { syncHeroStage } from './hero-stage';
 
 const reduced = prefersReducedMotion();
 const spout = startSpout();
-let story: ReturnType<typeof startStory> | undefined;
+let story: { build: () => void } | undefined;
+let storyReady: Promise<void> | undefined;
 let scrollReady = false;
 
 trackSections();
 startBottle();
-startNavbarTone();
 
 if (reduced) startReducedBottle();
 else syncHeroStage();
 
+function ensureStory() {
+  if (story) return Promise.resolve();
+  storyReady ??= import('./story').then(({ startStory }) => {
+    story = startStory(spout.setScroll);
+  });
+  return storyReady;
+}
+
+async function scrollTrigger() {
+  const { ScrollTrigger } = await import('gsap/ScrollTrigger');
+  gsap.registerPlugin(ScrollTrigger);
+  ScrollTrigger.config({ ignoreMobileResize: true });
+  return ScrollTrigger;
+}
+
 const layoutPage = () => {
-  spout.layout();
-  if (!reduced) {
-    story ??= startStory(spout.setScroll);
-    story.build();
-    if (!scrollReady) {
-      startSmoothScroll();
+  void (async () => {
+    spout.layout();
+    const ScrollTrigger = await scrollTrigger();
+    if (!reduced) {
+      await ensureStory();
+      story!.build();
+      if (!scrollReady) {
+        const [{ startSmoothScroll }, { startNavbarTone }] = await Promise.all([import('./smooth-scroll'), import('./navbar-tone')]);
+        startSmoothScroll();
+        startNavbarTone();
+        scrollReady = true;
+      }
+    } else if (!scrollReady) {
+      const { startNavbarTone } = await import('./navbar-tone');
+      startNavbarTone();
       scrollReady = true;
     }
-  }
-  ScrollTrigger.refresh();
+    ScrollTrigger.refresh();
+  })();
 };
 
 void startIntro(layoutPage);
 
 const idle = window.requestIdleCallback ?? ((cb: () => void) => setTimeout(cb, 1200));
 idle(() => {
-  startOrder();
-  startNotes();
+  void import('./order').then(({ startOrder }) => startOrder());
+  void import('./notes').then(({ startNotes }) => startNotes());
 });
 
 let lastWidth = window.innerWidth;
