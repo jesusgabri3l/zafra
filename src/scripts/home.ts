@@ -34,8 +34,8 @@ async function scrollTrigger() {
   return ScrollTrigger;
 }
 
-const layoutPage = () => {
-  void (async () => {
+const layoutPage = () =>
+  (async () => {
     spout.layout();
     const ScrollTrigger = await scrollTrigger();
     if (!reduced) {
@@ -55,7 +55,6 @@ const layoutPage = () => {
     }
     ScrollTrigger.refresh();
   })();
-};
 
 void startIntro(layoutPage);
 

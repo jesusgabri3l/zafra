@@ -8,7 +8,7 @@ import { setScrollLocked } from './scroll-lock';
 const TIMEOUT = 10_000; // red caída o lenta: sale igual con lo que haya
 
 // `prepare` arma el layout y el timeline del recorrido; `intro` entrega la botella a ese estado al terminar.
-export async function startIntro(prepare: () => void) {
+export async function startIntro(prepare: () => Promise<void>) {
   const root = document.documentElement;
   const reduced = prefersReducedMotion();
   window.scrollTo(0, 0);
@@ -27,6 +27,7 @@ export async function startIntro(prepare: () => void) {
   if (whole) tasks.push(whole.decode().catch(() => undefined));
   await Promise.race([Promise.all(tasks), new Promise((resolve) => setTimeout(resolve, TIMEOUT))]);
 
+  await prepare(); // la chapa y la botella salen de story.ts: sin esto la chapa entra en otra posición
   root.setAttribute('data-ready', ''); // kicker + brochazos; el titular y la fruta siguen ocultos hasta la intro
 
   const idle = window.requestIdleCallback ?? ((cb: () => void) => setTimeout(cb, 800));
@@ -51,7 +52,7 @@ export async function startIntro(prepare: () => void) {
     intro.active = false;
     root.removeAttribute('data-loading');
     setScrollLocked(false);
-    prepare(); // al volver el scroll de la página cambian los anchos: se mide otra vez
+    void prepare(); // al volver el scroll de la página cambian los anchos: se mide otra vez
   };
 
   const tl = gsap.timeline({ paused: true, onComplete: finish });
@@ -80,6 +81,11 @@ export async function startIntro(prepare: () => void) {
 
   tl.fromTo('[data-nail-cap]', { scale: 0 }, { scale: 1, duration: 0.7, ease: 'back.out(2)' }, 0.9);
   tl.to({}, { duration: 0.1 }, 1.6); // la barra y el sonido entran cuando todo terminó
+
+  // La barra entra con el hero: el logo cae y rebota como las letras, PEDIR salta como la chapa.
+  tl.set('[data-navbar]', { visibility: 'visible', opacity: 1, transition: 'none' }, 1.15);
+  tl.fromTo('.navbar__brand', { y: -80, rotation: -10 }, { y: 0, rotation: 0, duration: 0.6, ease: 'back.out(1.8)' }, 1.15);
+  tl.fromTo('.navbar__cta', { scale: 0, rotation: 12 }, { scale: 1, rotation: 0, duration: 0.55, ease: 'back.out(2.2)' }, 1.3);
 
   if (reduced) {
     tl.progress(1); // sin movimiento: el hero ya armado
