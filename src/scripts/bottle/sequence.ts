@@ -2,7 +2,7 @@ import { FLAVORS } from '../../data/flavors';
 import images from '../../data/bottleImages.json';
 
 // La botella son tres imágenes 2D de frente (una por sabor, gouache). Posición, escala, inclinación y balanceo son CSS transform.
-// Cambio de sabor = fundido entre imágenes. Las exporta fuentes/exportar_botellas.mjs (sin variante destapada: el footer ya no hace el destape).
+// Cambio de sabor = fundido entre imágenes.
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
 const CHAPTER_GROUND = ['--mora', '--mandarina', '--maracuya']; // fondo de cada capítulo, para teñir la sombra de contacto
 
