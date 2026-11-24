@@ -20,8 +20,8 @@ A landing page concept for a fictional brand. ZAFRA is not a real business: the 
 <table>
   <tr>
     <td align="center" width="33%"><img src="docs/screenshots/mobile-hero-2026-11-24.jpg" alt="Hero on a phone: SODA DE PANELA, FRUTA DE VERDAD and the maracuyá intro" width="100%" /><br /><sub>Hero</sub></td>
-    <td align="center" width="33%"><img src="docs/screenshots/mobile-fill-2026-11-24.jpg" alt="Fill on a phone: La más fría, ingredients and the spinning PRUÉBALA ring" width="100%" /><br /><sub>B · Fill</sub></td>
-    <td align="center" width="33%"><img src="docs/screenshots/mobile-order-2026-11-24.jpg" alt="Order on a phone: build a six-pack and WhatsApp button" width="100%" /><br /><sub>D · Order</sub></td>
+    <td align="center" width="33%"><img src="docs/screenshots/mobile-flavors-2026-11-24.jpg" alt="Flavors on a phone: zigzag taste names, postals and gouache fruit" width="100%" /><br /><sub>Sabores</sub></td>
+    <td align="center" width="33%"><img src="docs/screenshots/mobile-order-2026-11-24.jpg" alt="Order on a phone: build a six-pack and WhatsApp button" width="100%" /><br /><sub>Pedido</sub></td>
   </tr>
 </table>
 
@@ -30,8 +30,6 @@ A landing page concept for a fictional brand. ZAFRA is not a real business: the 
 - **B Fill:** “La más fría” with ice cubes that fall on scroll.
 - **C Sabores:** zigzag MARACUYÁ → MORA → LULO, postals, one bottle that changes flavor with a 2D spin.
 - **D Pedido:** pick flavors, build a six-pack, open WhatsApp with the message filled in.
-
-<img src="docs/screenshots/desktop-order-2026-11-24.jpg" alt="Order on desktop: six-pack builder with flavor caps, counters and WhatsApp" width="100%" />
 
 ## How it's built
 

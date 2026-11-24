@@ -22,7 +22,13 @@ const MOBILE = { width: 390, height: 844 };
 /** Vista completa en móvil (viewport), no recorte de elemento sticky. */
 const MOBILE_VIEWS = [
   { name: `mobile-hero-${stamp}`, scroll: async (page) => page.evaluate(() => scrollTo(0, 0)) },
-  { name: `mobile-fill-${stamp}`, scroll: async (page) => page.locator('.fill').first().scrollIntoViewIfNeeded() },
+  {
+    name: `mobile-flavors-${stamp}`,
+    scroll: async (page) => {
+      await page.locator('[data-flavor-item]').nth(1).scrollIntoViewIfNeeded();
+      await page.evaluate(() => scrollBy(0, 80));
+    },
+  },
   { name: `mobile-order-${stamp}`, scroll: async (page) => page.locator('#pedido').scrollIntoViewIfNeeded() },
 ];
 
@@ -127,13 +133,6 @@ async function main() {
     await sharp(heroPng).jpeg({ quality: 90, mozjpeg: true }).toFile(join(docsDir, `desktop-hero-${stamp}.jpg`));
     console.log(outOg);
     console.log(join(docsDir, `desktop-hero-${stamp}.jpg`));
-
-    await page.locator('.order').first().scrollIntoViewIfNeeded();
-    await page.waitForTimeout(700);
-    await sharp(await page.screenshot({ type: 'png', fullPage: false }))
-      .jpeg({ quality: 90, mozjpeg: true })
-      .toFile(join(docsDir, `desktop-order-${stamp}.jpg`));
-    console.log(join(docsDir, `desktop-order-${stamp}.jpg`));
     await context.close();
 
     // Móvil
