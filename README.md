@@ -50,17 +50,17 @@ PageSpeed Insights on the [live demo](https://jesusgabri3l.github.io/zafra/), No
     <th width="50%">Desktop</th>
   </tr>
   <tr>
-    <td><img src="docs/screenshots/pagespeed-mobile-2026-11-24.png" alt="PageSpeed mobile: Performance 69, Accessibility 100, Best Practices 96, SEO 100" width="100%" /></td>
-    <td><img src="docs/screenshots/pagespeed-desktop-2026-11-24.png" alt="PageSpeed desktop: Performance 92, Accessibility 100, Best Practices 100, SEO 100" width="100%" /></td>
+    <td><img src="docs/screenshots/pagespeed-mobile-2026-11-24-dark.png" alt="PageSpeed mobile: Performance 74, Accessibility 100, Best Practices 96, SEO 100" width="100%" /></td>
+    <td><img src="docs/screenshots/pagespeed-desktop-2026-11-24-dark.png" alt="PageSpeed desktop: Performance 97, Accessibility 100, Best Practices 100, SEO 100" width="100%" /></td>
   </tr>
 </table>
 
 | PageSpeed | Mobile | Desktop |
 |---|---|---|
-| First Contentful Paint | 1.1 s | 0.5 s |
-| Largest Contentful Paint | 8.5 s | 1.7 s |
-| Cumulative Layout Shift | 0 | 0.007 |
-| Total Blocking Time | 140 ms | 0 ms |
+| First Contentful Paint | 0.9 s | 0.2 s |
+| Largest Contentful Paint | 8.2 s | 1.2 s |
+| Cumulative Layout Shift | 0 | 0 |
+| Total Blocking Time | 0 ms | 0 ms |
 
 ## Development
 
