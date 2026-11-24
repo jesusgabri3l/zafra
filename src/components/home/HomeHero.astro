@@ -1,4 +1,5 @@
 ---
+import BaseButton from '../base/BaseButton.astro';
 import BaseCap from '../base/BaseCap.astro';
 import BaseFruit from '../base/BaseFruit.astro';
 import BaseLetters from '../base/BaseLetters.astro';
@@ -14,7 +15,7 @@ const drops = [
 ] as const;
 ---
 
-<section class="hero" data-bar="light" data-analytics-section="hero" aria-labelledby="inicio-titulo">
+<section class="hero" data-bar="hero" data-analytics-section="hero" aria-labelledby="inicio-titulo">
   <div class="hero__content" data-hero-content>
     <p class="hero__kicker">
       Soda de panela
@@ -27,6 +28,7 @@ const drops = [
       <span class="hero__line"><BaseLetters text="Fruta de" /></span>
       <span class="hero__line"><BaseLetters text="Verdad" /></span>
     </h1>
+    <BaseButton class="hero__cta" href="#pedido" size="large" data-jump>Arma tu six-pack</BaseButton>
   </div>
 
   <div class="hero__fruit" aria-hidden="true">

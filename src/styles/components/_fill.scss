@@ -86,6 +86,13 @@
 
   &__annotation {
     padding-bottom: 28px; // la flecha de la nota cuelga debajo del texto
+
+    // En la fila de pastillas la flecha caía al vacío: va a la izquierda de la botella (x 80vw) y apunta a su cuerpo.
+    @media (min-width: 1100px) {
+      position: absolute;
+      top: 50%;
+      left: 50vw;
+    }
   }
 
   // Cubos de hielo en gouache que caen alrededor de la botella (story.ts les da la Caída).

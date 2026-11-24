@@ -82,10 +82,11 @@ export async function startIntro(prepare: () => Promise<void>) {
   tl.fromTo('[data-nail-cap]', { scale: 0 }, { scale: 1, duration: 0.7, ease: 'back.out(2)' }, 0.9);
   tl.to({}, { duration: 0.1 }, 1.6); // la barra y el sonido entran cuando todo terminó
 
-  // La barra entra con el hero: el logo cae y rebota como las letras, PEDIR salta como la chapa.
+  tl.fromTo('.hero__cta', { scale: 0, rotation: -8 }, { scale: 1, rotation: 0, duration: 0.55, ease: 'back.out(2)' }, 0.75); // salta cuando el titular ya está armado
+
+  // La barra entra con el hero: el logo cae y rebota como las letras (PEDIR está oculto en el hero: ahí manda el CTA grande).
   tl.set('[data-navbar]', { visibility: 'visible', opacity: 1, transition: 'none' }, 1.15);
   tl.fromTo('.navbar__brand', { y: -80, rotation: -10 }, { y: 0, rotation: 0, duration: 0.6, ease: 'back.out(1.8)' }, 1.15);
-  tl.fromTo('.navbar__cta', { scale: 0, rotation: 12 }, { scale: 1, rotation: 0, duration: 0.55, ease: 'back.out(2.2)' }, 1.3);
 
   if (reduced) {
     tl.progress(1); // sin movimiento: el hero ya armado

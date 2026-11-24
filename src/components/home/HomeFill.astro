@@ -50,7 +50,7 @@ const ice = [
         <BaseFruit class:list={['fill__cube', { 'fill__cube--extra': 'extra' in cube }]} name="hielo" width={cube.width} data-ice data-big={'big' in cube ? '' : undefined} data-rotation={cube.rotation} style={`--x:${cube.x}%;--y:${cube.y}%;--mx:${cube.mx}%;--my:${cube.my}%;${'flip' in cube ? 'scale:-1 1;' : ''}`} />
       ))}
       <!-- La chapa de maracuyá tirada abajo, entre botella y botón, cortada por el rasgado. -->
-      <BaseCap class="fill__cube fill__cap" flavor={FLAVORS.find(({ id }) => id === 'maracuya')!} data-ice data-rotation="14" style="--x:67%;--y:97%;--mx:24%;--my:97%" />
+      <BaseCap class="fill__cube fill__cap" flavor={FLAVORS.find(({ id }) => id === 'maracuya')!} data-ice data-rotation="14" style="--x:67%;--y:97%;--mx:34%;--my:97%" />
     </div>
 
     <div class="fill__bottle-slot" data-reduced-slot data-chapter="1" data-fill="1" data-sweat="1" aria-hidden="true"></div>

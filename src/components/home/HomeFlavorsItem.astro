@@ -17,7 +17,7 @@ const { flavor, index, level, fruit } = Astro.props;
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const sign = index % 2 ? -1 : 1; // la postal y la tarjeta alternan la inclinación
 // Dónde cae cada pieza (% del ancho de la palabra): la tarjeta, sobre sus últimas letras; la postal, sobre las del medio.
-const cardLefts: Record<string, number> = { mora: 74, maracuya: 86, lulo: 112 };
+const cardLefts: Record<string, number> = { mora: 106, maracuya: 86, lulo: 112 };
 const postalLefts: Record<string, number> = { mora: 36, maracuya: 34, lulo: 10 };
 ---
 

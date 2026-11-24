@@ -104,7 +104,12 @@ function buildTimeline() {
   const manifesto = query<HTMLElement>('.manifesto');
   const hero = query<HTMLElement>('.hero');
   // A queda fija durante el paso horizontal (sticky): su sitio en el documento es el del contenedor + 100svh, no su rect actual.
-  const aTop = documentTop(query('[data-pass]')) + V;
+  // Si la receta cabe en la 1.ª pantalla, A se queda fija `hold` px más mientras caen los 3 pasos (se leen con la tarjeta) y luego se suelta.
+  const pass = query<HTMLElement>('[data-pass]');
+  const recipe = query<HTMLElement>('.manifesto__recipe');
+  const hold = recipe.offsetTop + recipe.offsetHeight <= V * 0.97 ? 0.75 * V : 0;
+  pass.style.setProperty('--hold', `${hold}px`); // antes de medir lo de abajo: todo lo que sigue a A baja `hold`
+  const aTop = documentTop(pass) + V;
   const card = query<HTMLElement>('[data-manifesto-card]');
   const spout = query<HTMLElement>('.spout');
   const fill = query<HTMLElement>('.fill');
@@ -141,7 +146,7 @@ function buildTimeline() {
   gsap.set(nail, { x: slotX, y: slotY, xPercent: -50, yPercent: -50, scale: slotScale, rotation: 0 });
   tl.fromTo(nail, { x: slotX, y: slotY, scale: slotScale, rotation: 0 }, { x: nailX, y: nailY - nailAt, scale: 1, rotation: 2 * 360 + tilt, duration: nailAt, ease: 'power2.inOut', ...noImmediate }, 0);
   // Clavada: desde aquí se queda en la tarjeta (fija en pantalla, así que sube 1:1 con el scroll) y se hunde con ella.
-  tl.fromTo(nail, { y: nailY - nailAt }, { y: nailY - nailAt - cardExit, duration: cardExit, ...noImmediate }, nailAt);
+  tl.fromTo(nail, { y: nailY - nailAt }, { y: nailY - nailAt - cardExit, duration: cardExit, ...noImmediate }, nailAt + hold);
   tl.fromTo(card, { y: 0 }, { y: 6, duration: 0.02 * V, ease: 'power2.out' }, nailAt);
   tl.to(card, { y: 0, duration: 0.05 * V, ease: 'back.out(3)' }, nailAt + 0.02 * V);
   tl.fromTo(nailCap, { y: 0 }, { y: 6, duration: 0.02 * V, ease: 'power2.out', ...noImmediate }, nailAt);
@@ -160,10 +165,11 @@ function buildTimeline() {
   // desde que la fila entra por abajo; su texto se revela al aterrizar. Los "+" y el "=" aparecen con escala .6 → 1 después de la
   // estación que los precede; la nota de la panela se dibuja con su estación.
   const table = aTop;
-  const recipeTop = table + query<HTMLElement>('.manifesto__recipe').offsetTop; // offsetParent = A
+  const recipeTop = table + recipe.offsetTop; // offsetParent = A
   const signs = queryAll<HTMLElement>('[data-sign]');
   const steps = queryAll<HTMLElement>('[data-step]');
-  const stepStart = (index: number) => Math.max(recipeTop - 0.95 * V, 1.05 * V) + index * 0.08 * V; // nunca antes de que A llegue
+  // Con hold: caen mientras A está fija (terminan ~0.15 V antes de soltarla). Sin hold: cuando la fila entra por abajo, nunca antes de que A llegue.
+  const stepStart = (index: number) => (hold ? 1.05 * V + index * 0.12 * V : Math.max(recipeTop - 0.95 * V, 1.05 * V) + index * 0.08 * V);
   steps.forEach((step, index) => {
     const start = stepStart(index);
     tl.fromTo(step, { scale: 0.3, y: 30, autoAlpha: 0 }, { scale: 1, y: 0, autoAlpha: 1, duration: 0.24 * V, ease: 'back.out(1.7)' }, start);
@@ -175,10 +181,10 @@ function buildTimeline() {
     tl.fromTo(note.querySelector('path'), { strokeDasharray: 1, strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.12 * V }, start + 0.2 * V);
   });
 
-  // Parallax: desde que A se suelta (V) hasta que sale, el fondo (0.9) se queda atrás y el primer plano (1.2) sube más rápido.
+  // Parallax: desde que A se suelta (V + hold) hasta que sale, el fondo (0.9) se queda atrás y el primer plano (1.2) sube más rápido.
   const aHeight = manifesto.offsetHeight;
   queryAll<HTMLElement>('[data-parallax]').forEach((layer) => {
-    tl.fromTo(layer, { y: 0 }, { y: (1 - Number(layer.dataset.parallax)) * aHeight, duration: aHeight }, V);
+    tl.fromTo(layer, { y: 0 }, { y: (1 - Number(layer.dataset.parallax)) * aHeight, duration: aHeight }, V + hold);
   });
 
   // La botella espera acostada en la mesa (a la derecha, sin mover x) y se endereza (back.out) hacia el centro, rumbo al chorro, cuando aterriza la última estación.

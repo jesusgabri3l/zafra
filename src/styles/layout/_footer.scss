@@ -15,7 +15,7 @@
   background: #31061c;
 
   @include until-tablet {
-    padding-bottom: 28svh; // deja ver el paisaje debajo de las columnas
+    padding-bottom: 14svh; // deja ver el paisaje limpio debajo de la fila legal
   }
   color: var(--espuma);
 
@@ -32,6 +32,11 @@
     left: 0;
     pointer-events: none;
 
+    // En móvil el paisaje llena todo el footer, detrás del texto (el velo ::before lo oscurece para leer).
+    @include until-tablet {
+      top: 0;
+    }
+
     // El borde de arriba de la foto se funde con el fondo: sin corte entre color liso y cielo.
     img {
       display: block;
@@ -41,9 +46,11 @@
       -webkit-mask-image: linear-gradient(to bottom, transparent, #000 22%);
 
       @include until-tablet {
-        height: 42svh;
+        height: 100%;
         object-fit: cover;
         object-position: 30% 100%;
+        mask-image: none;
+        -webkit-mask-image: none;
       }
     }
   }
@@ -57,6 +64,12 @@
     height: 70%;
     background: linear-gradient(to bottom, rgb(49 6 28 / 0.85) 40%, transparent);
     pointer-events: none;
+
+    // Móvil: velo en todo el alto, más denso donde está el texto y más claro abajo, donde el paisaje se ve limpio.
+    @include until-tablet {
+      height: 100%;
+      background: linear-gradient(to bottom, rgb(49 6 28 / 0.82) 0%, rgb(49 6 28 / 0.62) 55%, rgb(49 6 28 / 0.2) 88%);
+    }
   }
 
   // Velo oscuro abajo: la fila legal se lee sobre el follaje.

@@ -8,7 +8,7 @@
   &::after {
     content: '';
     display: block;
-    height: 100svh;
+    height: calc(100svh + var(--hold, 0px)); // --hold (story.ts): A se queda fija mientras caen los pasos de la receta
   }
 
   .hero {

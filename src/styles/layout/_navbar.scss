@@ -23,7 +23,8 @@
     --button-ink: var(--tinta);
   }
 
-  &[data-tone='light'] {
+  &[data-tone='light'],
+  &[data-tone='hero'] {
     --bar-ink: var(--tinta);
     --button-bg: var(--tinta);
     --button-ink: var(--maracuya);
@@ -37,9 +38,15 @@
     }
   }
 
-  // Abajo ya está el botón grande.
+  &__cta {
+    transition: opacity 0.3s, visibility 0.3s;
+  }
+
+  // En el hero y en D ya está el botón grande.
+  &[data-tone='hero'] &__cta,
   &[data-tone='order'] &__cta {
     visibility: hidden;
+    opacity: 0;
   }
 
   &__brand {
@@ -68,11 +75,13 @@
     }
   }
 
-  &[data-tone='light'] &__logo--light {
+  &[data-tone='light'] &__logo--light,
+  &[data-tone='hero'] &__logo--light {
     display: block;
   }
 
-  &[data-tone='light'] &__logo--dark {
+  &[data-tone='light'] &__logo--dark,
+  &[data-tone='hero'] &__logo--dark {
     display: none;
   }
 }

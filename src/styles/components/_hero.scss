@@ -11,6 +11,18 @@
   @include paper(var(--maracuya), true);
   color: var(--tinta);
 
+  // Extiende el papel maracuyá bajo el hero lo que crece la pantalla al esconder la barra del navegador (sin cambiar V).
+  &::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    right: 0;
+    left: 0;
+    height: calc(100lvh - 100svh);
+    background: inherit;
+    pointer-events: none;
+  }
+
   &__content {
     position: absolute;
     inset: 0;
@@ -76,6 +88,19 @@
 
   &__line {
     display: block;
+  }
+
+  // CTA principal: los colores del PEDIR de la barra sobre fondo claro (tinta + maracuyá), con sombra corta de sticker como la cinta.
+  &__cta {
+    --button-bg: var(--tinta);
+    --button-ink: var(--maracuya);
+    margin-top: 1svh;
+    box-shadow: 4px 5px 0 rgb(24 4 14 / 32%);
+
+    @include until-tablet {
+      min-height: 56px;
+      padding: 16px 28px;
+    }
   }
 
   // La nota apunta a la botella, que se para a la derecha sobre el canto del brochazo.
