@@ -1,0 +1,54 @@
+---
+import BaseCap from '../base/BaseCap.astro';
+import BaseFruit from '../base/BaseFruit.astro';
+import BaseLetters from '../base/BaseLetters.astro';
+import BaseNote from '../base/BaseNote.astro';
+import BaseStroke from '../base/BaseStroke.astro';
+import { FLAVORS } from '../../data/flavors';
+
+// La receta en la mesa: fruta + panela + burbujas = botella (se leen en el texto del manifiesto).
+// Tres planos con parallax (story.ts): brochazo vino al fondo (0.9), tarjeta y receta en medio, moras y gotas al frente (1.2).
+const steps = [
+  { id: 'pulp', image: 'a-pulpa', number: '01', name: 'Fruta', line: 'Pulpa de fruta entera. Nada de esencias.' },
+  { id: 'panela', image: 'panela', number: '02', name: 'Panela', line: 'Endulza en vez del jarabe.' },
+  { id: 'bubbles', image: 'a-burbujas', number: '03', name: 'Burbujas', line: 'Agua con gas, bien fría.' },
+] as const;
+---
+
+<section class="manifesto" data-bar="dark" data-analytics-section="manifesto" aria-labelledby="manifiesto-titulo">
+  <!-- Filo crema del borde izquierdo rasgado (el recorte lo hace .manifesto con clip-path; solo con scroll animado). -->
+  <div class="manifesto__back" data-parallax="0.9" aria-hidden="true">
+    <!-- Diagonal desde abajo a la izquierda hasta los pies de la botella (que está a la derecha). -->
+    <BaseStroke tone="vino" tilt={-7} top="62svh" width="130vw" height="30svh" />
+  </div>
+  <div class="manifesto__front" data-parallax="1.2" aria-hidden="true">
+    <BaseFruit class="manifesto__moras" name="moras" style="width:var(--moras-width)" />
+    <BaseFruit class="manifesto__drop manifesto__drop--1" name="gota-4" style="width:var(--drop-width)" />
+    <BaseFruit class="manifesto__drop manifesto__drop--2" name="gota-6" style="width:calc(var(--drop-width) * 0.6)" />
+    <BaseFruit class="manifesto__drop manifesto__drop--3" name="gota-2" style="width:calc(var(--drop-width) * 0.9)" />
+  </div>
+  <article class="manifesto__card" data-manifesto-card>
+    <!-- Con scroll, la chapa fija (.nail) llega aquí y la acompaña; esta es la versión sin scroll animado. -->
+    <BaseCap class="manifesto__nail" flavor={FLAVORS.find(({ id }) => id === 'maracuya')!} />
+    <h2 class="manifesto__text" id="manifiesto-titulo"><BaseLetters text="Sin jarabe. Sin colorante. Sin cuento. Solo fruta, panela y burbujas." /></h2>
+  </article>
+
+  <ol class="manifesto__recipe" aria-label="La receta">
+    {steps.map(({ id, image, number, name, line }, index) => (
+      <Fragment>
+        {index > 0 && <li class="manifesto__sign" aria-hidden="true" data-sign>+</li>}
+        <li class={`manifesto__step manifesto__step--${id}`} data-step>
+          <BaseFruit class="manifesto__image" name={image} style="width:var(--step-width)" aria-hidden="true" />
+          <p class="manifesto__step-text" data-step-text>
+            <span class="manifesto__step-head">
+              <span class="manifesto__step-number">{number}</span>
+              <span class="manifesto__step-name">{name}</span>
+            </span>
+            <span class="manifesto__step-line">{line}</span>
+          </p>
+          {id === 'panela' && <BaseNote class="manifesto__note" flip="xy" scrubbed data-panela-note>de trapiche, no refinada</BaseNote>}
+        </li>
+      </Fragment>
+    ))}
+  </ol>
+</section>

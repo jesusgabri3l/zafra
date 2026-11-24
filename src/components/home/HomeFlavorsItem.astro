@@ -1,0 +1,46 @@
+---
+import BaseCap from '../base/BaseCap.astro';
+import BaseFruit from '../base/BaseFruit.astro';
+import BaseNote from '../base/BaseNote.astro';
+import sizes from '../../data/fruits.json';
+import type { Flavor } from '../../data/flavors';
+
+// Una palabra de sabor del zigzag: número en círculo, tarjeta crema con la fruta, postal del lugar de origen con la chapa-estampilla y una nota con flecha a la postal.
+interface Props {
+  flavor: Flavor;
+  index: number;
+  level: 'top' | 'bottom';
+  fruit: keyof typeof sizes;
+}
+
+const { flavor, index, level, fruit } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const sign = index % 2 ? -1 : 1; // la postal y la tarjeta alternan la inclinación
+// Dónde cae cada pieza (% del ancho de la palabra): la tarjeta, sobre sus últimas letras; la postal, sobre las del medio.
+const cardLefts: Record<string, number> = { mora: 74, maracuya: 86, lulo: 112 };
+const postalLefts: Record<string, number> = { mora: 36, maracuya: 34, lulo: 10 };
+---
+
+<li class={`flavors-item flavors-item--${level} flavors-item--${flavor.id}`} style={`--card-left:${cardLefts[flavor.id]}%;--postal-left:${postalLefts[flavor.id]}%`} data-flavor-item>
+  <span class="flavors-item__number" aria-hidden="true">{index + 1}</span>
+  <h3 class="flavors-item__word" data-flavor-word>{flavor.name}</h3>
+  <span class="flavors-item__card" style={`--tilt:${-6 * sign}deg`} aria-hidden="true">
+    <BaseFruit class="flavors-item__fruit" name={fruit} width={230} style={fruit === 'moras' ? 'scale:-1 1;' : ''} />
+  </span>
+  <figure class="flavors-item__postal" style={`--tilt:${5 * sign}deg;--sign:${sign}`} data-postal data-sign={sign}>
+    <img
+      class="flavors-item__postal-image"
+      src={`${base}/img/postales/${flavor.id}.webp`}
+      srcset={`${base}/img/postales/${flavor.id}-m.webp 640w, ${base}/img/postales/${flavor.id}.webp 1100w`}
+      sizes="(max-width: 767px) 64vw, 26vw"
+      width="1100"
+      height="733"
+      alt={`Paisaje de cultivo de ${flavor.name.toLowerCase()}, gouache.`}
+      loading="lazy"
+      decoding="async"
+    />
+    <BaseCap class="flavors-item__stamp" flavor={flavor} data-stamp />
+  </figure>
+  <BaseNote class="flavors-item__note" flip={level === 'top' ? 'xy' : 'x'}>{flavor.note}</BaseNote>
+  <div class="flavors-item__bottle-slot" data-reduced-slot data-chapter="2" data-fill="1" data-sweat="1" data-flavor={index} aria-hidden="true"></div>
+</li>

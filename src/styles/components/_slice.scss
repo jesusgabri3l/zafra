@@ -1,0 +1,27 @@
+@use '../abstracts' as *;
+
+// C -> D, ligado al scroll: 190svh de sección. La hoja mora de D sube como papel rasgado y se queda (story.ts).
+.slice {
+  height: 225svh; // 100svh fijo + 1.25 V de recorrido: la hoja sube 1:1 con el scroll y D con ella (story.ts)
+  overflow-x: clip;
+  margin-top: calc(-100svh - #{$seam-overlap}); // arranca cuando C termina de fijarse; traslapa (ver $seam-overlap)
+  @include paper(var(--maracuya), true); // el amarillo queda DEBAJO de C; solo la hoja sube por encima
+
+  html:not(.is-scrub) & {
+    display: none;
+  }
+
+  &__sticky {
+    position: sticky;
+    top: 0;
+    z-index: 4; // por encima de C (3): si no, C corta el rasgado con un borde recto
+    height: 100svh;
+  }
+
+  // Empieza debajo de la pantalla; el rasgado (BaseTear) cuelga sobre su borde superior.
+  &__sheet {
+    position: absolute;
+    inset: 0;
+    @include paper-dark(var(--mora), true);
+  }
+}

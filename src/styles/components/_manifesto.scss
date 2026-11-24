@@ -1,0 +1,271 @@
+@use '../abstracts' as *;
+
+// A. La mesa de la panela, en tres planos: fondo (brochazo vino, parallax 0.9), medio (tarjeta, receta, botella) y primer plano
+// (moras cortadas por el borde y gotas, parallax 1.2). Compacta: la tarjeta con su chapa y la receta en UNA fila horizontal pegada
+// debajo (la panela se monta sobre el borde de la tarjeta); la receta termina en "=" bajo la botella (que está a la derecha).
+.manifesto {
+  --note-ink: var(--rosa-mora);
+  --table-shadow: color-mix(in oklab, var(--mora) 78%, #000);
+  --bottle-x: 70vw; // x de la botella (story.ts: tableX)
+  --moras-width: 40vw;
+  --drop-width: 12vw;
+  position: relative;
+  z-index: 2;
+  display: flow-root; // el margen de la tarjeta no se funde con el de A: la chapa queda bajo la barra
+  overflow: clip; // el trazo es más ancho que la pantalla y las moras salen por el borde de arriba
+  padding: 0 var(--m) 6svh;
+  @include paper-dark(var(--mora), true);
+  color: var(--espuma);
+
+  @include from-tablet {
+    --bottle-x: 66vw;
+    --moras-width: 26vw;
+    --drop-width: 7vw;
+    min-height: 115svh; // card + receta caben en la 1.ª pantalla (scroll = V); el resto es la salida
+  }
+
+  @media (min-width: 1100px) {
+    --bottle-x: 82vw;
+  }
+
+  &__back,
+  &__front {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  &__front {
+    z-index: 3;
+  }
+
+  &__moras,
+  &__drop {
+    position: absolute;
+    max-width: none;
+    filter: drop-shadow(8px 10px 0 var(--table-shadow));
+  }
+
+  &__moras {
+    top: -10vw; // cortadas por el borde de arriba (a Jesús le gusta así); solo la tarjeta necesita aire
+    right: -8vw;
+    rotate: 8deg;
+
+    @include from-tablet {
+      top: -6vw;
+      right: -5vw;
+    }
+  }
+
+  &__drop--1 {
+    top: 13vw;
+    right: 5vw;
+    rotate: -10deg;
+  }
+
+  &__drop--2 {
+    top: 22vw;
+    right: 2vw;
+    rotate: 14deg;
+  }
+
+  &__drop--3 {
+    top: 6vw;
+    right: 24vw;
+    rotate: 6deg;
+  }
+
+  // La receta: UNA fila en los 62vw de la izquierda. En móvil, tres objetos de 26vw con "+" de 32px y el "=" en una línea bajo la fila.
+  &__recipe {
+    --step-width: calc((100vw - 2 * var(--m) - 64px) / 3);
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin: 0;
+    padding: 0 0 72px;
+    list-style: none;
+
+    @include from-tablet {
+      width: calc(62vw - var(--m));
+      margin-top: 5svh;
+      padding-bottom: 0;
+    }
+  }
+
+  &__step {
+    position: relative;
+    display: flex;
+    flex: none;
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+    width: var(--step-width);
+
+    @include from-tablet {
+      width: max(var(--step-width), 190px);
+    }
+
+    &--pulp {
+      @include from-tablet {
+        --step-width: 12vw;
+      }
+    }
+
+    // Se monta ~4vw sobre el borde de abajo de la tarjeta.
+    &--panela {
+      margin-top: -2.5vw;
+
+      @include from-tablet {
+        --step-width: 17vw;
+      }
+    }
+
+    &--bubbles {
+      @include from-tablet {
+        --step-width: 9vw;
+      }
+    }
+  }
+
+  &__image {
+    flex: none;
+    max-width: none;
+    filter: drop-shadow(8px 10px 0 var(--table-shadow));
+  }
+
+  &__step--panela &__image {
+    rotate: -12deg;
+  }
+
+  &__step-text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 100%;
+    margin: 0;
+  }
+
+  &__step-head {
+    display: flex;
+    gap: 8px;
+    align-items: baseline;
+  }
+
+  &__step-number {
+    color: var(--maracuya);
+    font-family: var(--font-hand), cursive;
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 1;
+  }
+
+  &__step-name {
+    @include label-font(13px);
+    color: var(--espuma);
+
+    @include from-tablet {
+      font-size: 15px;
+    }
+  }
+
+  &__step-line {
+    font-size: 13px;
+    line-height: 1.25;
+    color: var(--rosa-mora);
+
+    @include from-tablet {
+      font-size: 15px;
+    }
+  }
+
+  &__sign {
+    flex: none;
+    align-self: flex-start;
+    margin-top: 8vw;
+    color: var(--maracuya);
+    font-family: var(--font-hand), cursive;
+    font-weight: 600;
+    font-size: 32px;
+    line-height: 1;
+
+    @include from-tablet {
+      margin-top: 3vw;
+      font-size: 48px;
+    }
+
+    // El "=" no va en la fila: se para bajo la botella (el producto).
+    &--result {
+      position: absolute;
+      bottom: 12px;
+      left: calc(var(--bottle-x) - var(--m));
+      translate: -50% 0;
+
+      @include from-tablet {
+        top: 78%;
+        bottom: auto;
+      }
+    }
+  }
+
+  // La nota cuelga bajo la estación de la panela y su flecha apunta hacia ella.
+  &__note {
+    position: absolute;
+    top: 100%;
+    left: -6vw;
+    margin: 8px 0 0;
+
+    @include from-tablet {
+      left: 0;
+    }
+  }
+
+  &__card {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    align-content: center;
+    width: 86vw;
+    min-height: 40svh;
+    margin: calc(14svh + 70px) 0 0 calc(7vw - var(--m)); // la chapa (radio 45) queda entera bajo el 14svh
+    padding: 56px 24px 32px;
+    border-radius: 48px;
+    rotate: -3deg;
+    @include card-cream(var(--mora));
+    box-shadow: 16px 12px 0 var(--table-shadow);
+
+    @include from-tablet {
+      width: 46vw;
+      min-height: 36svh;
+      margin: max(23svh, 160px) 0 0 calc(9vw - var(--m)); // la chapa (radio 60) queda entera bajo la barra
+      padding: 52px 36px 28px;
+    }
+  }
+
+  // La chapa clavada en el borde de arriba, a la izquierda (12 % del ancho: story.ts NAIL_LEFT). Con scroll la pone la chapa fija (.nail, story.ts); esta es la versión estática.
+  &__nail {
+    .is-scrub & {
+      display: none;
+    }
+
+    position: absolute;
+    top: 0;
+    left: 12%;
+    width: 90px;
+    translate: -50% -50%;
+
+    @include from-tablet {
+      width: 120px;
+    }
+  }
+
+  &__text {
+    @include display-font(clamp(34px, 9vw, 44px), 0.9);
+    text-align: left;
+
+    @include from-tablet {
+      font-size: clamp(32px, 3.2vw, 60px);
+    }
+  }
+}

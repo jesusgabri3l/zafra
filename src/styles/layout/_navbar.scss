@@ -1,0 +1,78 @@
+@use '../abstracts' as *;
+
+// Sin fondo ni enlaces: la página es una sola escena. El color cambia con el capítulo (navbar-tone.ts) con un corte seco.
+.navbar {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--navbar-height);
+  padding-inline: var(--m);
+  pointer-events: none;
+
+  > * {
+    pointer-events: auto;
+  }
+
+  &[data-tone='dark'],
+  &[data-tone='order'] {
+    --bar-ink: var(--maracuya);
+    --button-bg: var(--maracuya);
+    --button-ink: var(--tinta);
+  }
+
+  &[data-tone='light'] {
+    --bar-ink: var(--tinta);
+    --button-bg: var(--tinta);
+    --button-ink: var(--maracuya);
+    --focus: var(--tinta);
+  }
+
+  // En móvil D pasa por debajo de la barra: sin fondo, el logo amarillo se pierde sobre la tarjeta crema.
+  &[data-tone='order'] {
+    @include until-tablet {
+      background: linear-gradient(var(--mora-honda) 70%, transparent);
+    }
+  }
+
+  // Abajo ya está el botón grande.
+  &[data-tone='order'] &__cta {
+    visibility: hidden;
+  }
+
+  &__brand {
+    display: block;
+    transition: opacity 0.3s, visibility 0.3s;
+  }
+
+  // Sobre el footer (tono oscuro) ya está el logo grande: el de la barra se esconde para no repetirlo.
+  &[data-tone='footer'] &__brand {
+    visibility: hidden; // también sale del orden de tabulación
+    opacity: 0;
+  }
+
+  // Dos logos gouache: vino sobre fondos claros, amarillo sobre oscuros. Se muestra el del tono de la barra.
+  &__logo {
+    display: block;
+    width: auto;
+    height: 40px;
+
+    @include from-tablet {
+      height: 48px;
+    }
+
+    &--light {
+      display: none;
+    }
+  }
+
+  &[data-tone='light'] &__logo--light {
+    display: block;
+  }
+
+  &[data-tone='light'] &__logo--dark {
+    display: none;
+  }
+}

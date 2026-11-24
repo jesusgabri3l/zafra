@@ -1,0 +1,96 @@
+@use 'variables' as *;
+
+@mixin from-tablet {
+  @media (min-width: $breakpoint-tablet) {
+    @content;
+  }
+}
+
+@mixin until-tablet {
+  @media (max-width: #{$breakpoint-tablet - 0.01px}) {
+    @content;
+  }
+}
+
+@mixin reduced-motion {
+  @media (prefers-reduced-motion: reduce) {
+    @content;
+  }
+}
+
+// Titular: Bricolage Grotesque 800, ancho 75 %, mayúsculas.
+@mixin display-font($size, $line-height: 0.88) {
+  font-family: var(--font-body);
+  font-weight: 800;
+  font-stretch: 75%;
+  font-size: $size;
+  line-height: $line-height;
+  text-transform: uppercase;
+}
+
+// Píldoras, botones y datos: 700, ancho 85 %, mayúsculas, tracking .06em.
+@mixin label-font($size: 13px) {
+  font-weight: 700;
+  font-stretch: 85%;
+  font-size: $size;
+  line-height: 1.2;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+// Sombra sólida desplazada (sin desenfoque): el color del fondo con 78 % de negro.
+@mixin solid-shadow($background) {
+  box-shadow: 8px 12px 0 color-mix(in oklab, #{$background} 78%, #000);
+}
+
+// Grano de papel (v5, punto 1): un mosaico quieto, nunca encima del texto ni de la fruta (va en el fondo del mismo elemento).
+// Claros: papel-sombra.webp (negro con alfa = 255 - papel) sobre el color: equivale a multiply pero con composición normal.
+// Con `background-blend-mode: multiply` Chrome deja ver el grano crudo (claro) en las filas fraccionarias del borde: línea clara de 1px en celulares.
+// Oscuros: el mosaico invertido en screen al 6 % (pseudo-elemento detrás del contenido).
+// `$fixed`: el grano se ancla a la pantalla (no al elemento), así dos secciones del mismo color vecinas no dejan costura.
+@mixin paper($color, $fixed: false) {
+  background-color: $color;
+  background-image: var(--img-papel-sombra);
+  background-size: 512px;
+
+  @if $fixed {
+    background-attachment: fixed;
+  }
+
+  @include from-tablet {
+    background-size: 1024px;
+  }
+}
+
+@mixin paper-dark($color, $fixed: false) {
+  isolation: isolate;
+  background: $color;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background: var(--img-papel) 0 0 / 512px;
+    filter: invert(1);
+    mix-blend-mode: screen;
+    opacity: 0.06;
+    pointer-events: none;
+
+    @if $fixed {
+      background-attachment: fixed;
+    }
+
+    @include from-tablet {
+      background-size: 1024px;
+    }
+  }
+}
+
+// Tarjeta crema con grano y sombra sólida desplazada (v5, punto 2). `$ground` es el color del campo donde se apoya.
+@mixin card-cream($ground, $shadow: color-mix(in oklab, #{$ground} 78%, #000)) {
+  @include paper(var(--crema));
+  color: var(--tinta);
+  box-shadow: 12px 14px 0 $shadow;
+}

@@ -1,0 +1,54 @@
+@use '../abstracts' as *;
+
+// La chapa del titular: UNA imagen fija que story.ts lleva del titular a la tarjeta del manifiesto y la acompaña ahí.
+// Encima de la botella y debajo de la barra (z 30). Sin scroll animado no existe: cada sitio trae su chapa estática.
+.nail {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 20;
+  width: 90px;
+  pointer-events: none;
+
+  @include from-tablet {
+    width: 120px;
+  }
+
+  html:not(.is-scrub) &,
+  html:not([data-ready]) & {
+    display: none;
+  }
+
+  &__cap {
+    width: 100%;
+  }
+}
+
+// Botella: una imagen 2D por sabor, debajo de la chapa. 100lvh: no cambia cuando la barra de direcciones de iOS se esconde.
+.bottle-stack {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 19;
+  width: 100%;
+  height: 100lvh;
+  overflow: hidden;
+  pointer-events: none;
+
+  &__shadow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-radius: 50%; // elipse plana sin desenfoque; el color lo pone sequence.ts según el fondo del capítulo
+    will-change: transform, width, height;
+  }
+
+  &__frame {
+    position: absolute;
+    top: 0;
+    left: 0;
+    max-width: none;
+    transform-origin: 0 0;
+    will-change: transform, opacity;
+  }
+}

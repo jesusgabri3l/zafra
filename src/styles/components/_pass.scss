@@ -1,0 +1,29 @@
+// Paso horizontal hero -> A (solo con scroll animado). El contenedor mide A + 100svh (::after: el padding no cuenta para sticky):
+// durante ese primer 100svh de scroll el hero y A van fijos (sticky) y story.ts desliza A desde la derecha; después A se suelta
+// y sigue vertical como siempre.
+.is-scrub .pass {
+  position: relative;
+  overflow-x: clip; // A viaja fuera de la pantalla: sin scroll horizontal
+
+  &::after {
+    content: '';
+    display: block;
+    height: 100svh;
+  }
+
+  .hero {
+    position: sticky;
+    top: 0;
+    margin-bottom: -100svh; // A arranca en el mismo punto que el hero
+  }
+
+  .manifesto {
+    position: sticky;
+    top: 0;
+    min-height: 100svh;
+  }
+}
+
+html:not([data-ready]) .pass .manifesto {
+  visibility: hidden; // hasta que story.ts la deje fuera de pantalla
+}

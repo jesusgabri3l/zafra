@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://jesusgabri3l.github.io/zafra/sitemap.xml

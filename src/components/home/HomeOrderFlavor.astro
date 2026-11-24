@@ -1,0 +1,25 @@
+---
+import BaseCap from '../base/BaseCap.astro';
+import { DEFAULT_ORDER_FLAVOR, type Flavor } from '../../data/flavors';
+
+// Chapa (elige el sabor de la botella) y contador de ese sabor.
+interface Props {
+  flavor: Flavor;
+  index: number;
+  count: number;
+}
+
+const { flavor, index, count } = Astro.props;
+---
+
+<li class="order-flavor" data-order-flavor={index}>
+  <button class="order-flavor__cap" type="button" data-order-pick aria-pressed={index === DEFAULT_ORDER_FLAVOR ? 'true' : 'false'} aria-label={`Ver la botella de ${flavor.name}`}>
+    <BaseCap flavor={flavor} />
+  </button>
+  <p class="order-flavor__name">{flavor.name}</p>
+  <div class="order-flavor__stepper" role="group" aria-label={`Cantidad de ${flavor.name}`}>
+    <button class="order-flavor__step" type="button" data-order-step="-1" aria-label={`Quitar una de ${flavor.name}`}>−</button>
+    <output class="order-flavor__count" data-order-count>{count}</output>
+    <button class="order-flavor__step" type="button" data-order-step="1" aria-label={`Agregar una de ${flavor.name}`}>+</button>
+  </div>
+</li>

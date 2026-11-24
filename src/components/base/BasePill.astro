@@ -1,0 +1,12 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+// Píldora de etiqueta. Por defecto, tinta con texto maracuyá; `light` es espuma con tinta (sobre oscuro).
+interface Props extends HTMLAttributes<'span'> {
+  light?: boolean;
+}
+
+const { light = false, class: className, ...attributes } = Astro.props;
+---
+
+<span class:list={['pill', light && 'pill--light', className]} {...attributes}><slot /></span>

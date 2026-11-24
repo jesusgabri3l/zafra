@@ -1,0 +1,53 @@
+---
+import BaseCap from '../base/BaseCap.astro';
+import BaseFruit from '../base/BaseFruit.astro';
+import BaseLetters from '../base/BaseLetters.astro';
+import BaseStroke from '../base/BaseStroke.astro';
+import BaseNote from '../base/BaseNote.astro';
+import { FLAVORS } from '../../data/flavors';
+
+// Cada gota sale en una dirección (grados) y distancia (en anchos de maracuyá).
+const drops = [
+  { name: 'gota-1', angle: -160, distance: 1.0, width: 46 },
+  { name: 'gota-3', angle: -105, distance: 1.2, width: 66 },
+  { name: 'gota-5', angle: -55, distance: 1.1, width: 70 },
+] as const;
+---
+
+<section class="hero" data-bar="light" data-analytics-section="hero" aria-labelledby="inicio-titulo">
+  <div class="hero__content" data-hero-content>
+    <p class="hero__kicker">
+      Soda de panela
+      <!-- Con scroll animado este hueco lo ocupa la chapa fija (.nail); sin él, esta imagen. -->
+      <span class="hero__logo" data-logo-slot aria-hidden="true"><BaseCap class="hero__logo-fallback" flavor={FLAVORS.find(({ id }) => id === 'maracuya')!} /></span>
+      que sabe a
+    </p>
+    <h1 class="hero__title" id="inicio-titulo">
+      <span class="sr-only">ZAFRA: </span>
+      <span class="hero__line"><BaseLetters text="Fruta de" /></span>
+      <span class="hero__line"><BaseLetters text="Verdad" /></span>
+    </h1>
+  </div>
+
+  <div class="hero__fruit" aria-hidden="true">
+    <div class="hero__fruit-box" data-fruit-box>
+      <BaseFruit class="hero__whole" name="maracuya-entera" width={170} preload data-whole />
+      <BaseFruit class="hero__half hero__half--1" name="maracuya-mitad-1" width={170} preload data-half="-1" />
+      <BaseFruit class="hero__half hero__half--2" name="maracuya-mitad-2" width={155} preload data-half="1" />
+      {drops.map(({ name, angle, distance, width }) => (
+        <BaseFruit class="hero__drop" name={name} width={width} preload data-drop data-angle={angle} data-distance={distance} />
+      ))}
+    </div>
+  </div>
+
+  <BaseNote class="hero__note" flip="x">fría, con panela</BaseNote>
+
+  <!-- Fondo pintado: dos brochazos que se pintan al cargar (scripts/intro.ts) y se quedan detrás del titular y la botella. -->
+  <div class="hero__brush" data-hero-brush aria-hidden="true">
+    <BaseStroke tone="ambar" tilt={-8} top="22%" width="135vw" height="46svh" data-hero-stroke />
+    <BaseStroke tone="hielo" tilt={6} top="74%" width="135vw" height="46svh" flip data-hero-stroke />
+  </div>
+
+
+  <div class="hero__bottle-slot" data-reduced-slot data-chapter="2" data-fill="1" data-sweat="0" aria-hidden="true"></div>
+</section>

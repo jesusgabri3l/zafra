@@ -1,0 +1,14 @@
+---
+import BaseTear from '../base/BaseTear.astro';
+
+// C -> D: la hoja mora de D sube como papel rasgado y tapa C, ligada al scroll (scripts/story.ts).
+// Sin scroll animado no existe: D trae su propio rasgado.
+---
+
+<div class="slice" data-slice data-analytics-section="slice" aria-hidden="true">
+  <div class="slice__sticky">
+    <div class="slice__sheet" data-sheet data-bar="order">
+      <BaseTear />
+    </div>
+  </div>
+</div>

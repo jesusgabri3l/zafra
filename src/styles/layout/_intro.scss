@@ -1,0 +1,19 @@
+@use '../abstracts' as *;
+
+// Mientras carga y corre la intro: sin scroll y sin barra (entra con fade de 300 ms al terminar).
+html[data-loading] {
+  overflow: hidden;
+
+  .navbar {
+    visibility: hidden;
+    opacity: 0;
+  }
+}
+
+.navbar {
+  transition: opacity 300ms;
+
+  @include reduced-motion {
+    transition: none;
+  }
+}

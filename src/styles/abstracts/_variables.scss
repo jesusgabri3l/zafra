@@ -1,0 +1,6 @@
+$breakpoint-tablet: 768px;
+$breakpoint-desktop: 1100px;
+
+// Uniones entre secciones: con DPR fraccionario (celulares) dos bordes que se tocan en medio píxel dejan ver el fondo de la página
+// (línea clara de 1px). Cada sección que sigue a otra se solapa $seam-overlap sobre la anterior (la de abajo pinta encima).
+$seam-overlap: 1px;

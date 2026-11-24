@@ -1,0 +1,43 @@
+---
+import BasePill from '../base/BasePill.astro';
+import BaseTear from '../base/BaseTear.astro';
+import BaseButton from '../base/BaseButton.astro';
+import BaseLetters from '../base/BaseLetters.astro';
+import BaseNote from '../base/BaseNote.astro';
+import BaseStroke from '../base/BaseStroke.astro';
+import HomeOrderFlavor from './HomeOrderFlavor.astro';
+import { BOTTLE_PRICE, FLAVORS, SIX_PACK_SIZE, formatPrice } from '../../data/flavors';
+
+const defaultCount = SIX_PACK_SIZE / FLAVORS.length;
+---
+
+<section class="order" id="pedido" data-bar="order" data-order data-analytics-section="order" data-size={SIX_PACK_SIZE} data-price={BOTTLE_PRICE} aria-labelledby="pedido-titulo">
+  <BaseTear />
+  <!-- Fondo pintado, tono sobre tono como en A: un trazo vino detrás de la tarjeta y uno mora honda detrás de la botella. -->
+  <div class="order__back" aria-hidden="true">
+    <BaseStroke tone="vino" tilt={-6} top="38%" width="110vw" height="46svh" />
+    <BaseStroke tone="mora-honda" tilt={9} top="72%" width="80vw" height="40svh" flip style="translate:-30vw 0" />
+  </div>
+  <div class="order__bottle" data-bottle-slot data-reduced-slot data-chapter="0" data-fill="1" data-sweat="1" aria-hidden="true"></div>
+
+  <div class="order__card" data-order-card>
+    <BasePill>Pedido</BasePill>
+    <h2 class="order__title" id="pedido-titulo" data-order-title><BaseLetters text="Arma tu six-pack" /></h2>
+    <p class="order__lead">Escoge 6 botellas, mezcla los sabores como quieras.</p>
+
+    <BaseNote class="order__note" flip="x">mézclalas, nadie te juzga</BaseNote>
+    <ul class="order__flavors">
+      {FLAVORS.map((flavor, index) => <HomeOrderFlavor flavor={flavor} index={index} count={defaultCount} />)}
+    </ul>
+
+    <div class="order__cart">
+      <p class="order__summary" aria-live="polite">
+        <span data-order-summary>{SIX_PACK_SIZE} de {SIX_PACK_SIZE}</span>
+        <span aria-hidden="true"> · </span>
+        <strong class="order__price" data-order-total>{formatPrice(BOTTLE_PRICE * SIX_PACK_SIZE)}</strong>
+      </p>
+      <p class="order__hint" data-order-hint aria-live="polite"></p>
+      <BaseButton class="order__submit" size="large" data-order-whatsapp target="_blank" rel="noopener">Pedir por WhatsApp</BaseButton>
+    </div>
+  </div>
+</section>

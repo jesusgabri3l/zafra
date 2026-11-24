@@ -1,0 +1,18 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+// Nota a mano con flecha a mano (el Trazo). La flecha nace al final del texto y apunta abajo a la izquierda; `flip` la gira
+// (x: abajo a la derecha, y: arriba a la izquierda, xy: arriba a la derecha). Se dibuja al entrar en pantalla (scripts/notes.ts);
+// `scrubbed` la deja a cargo del timeline (story.ts).
+interface Props extends HTMLAttributes<'p'> {
+  flip?: 'x' | 'y' | 'xy';
+  scrubbed?: boolean;
+}
+
+const { flip, scrubbed = false, class: className, ...attributes } = Astro.props;
+---
+
+<p class:list={['note', className]} data-note={scrubbed ? undefined : ''} {...attributes}>
+  <slot />
+  <svg class:list={['note__arrow', flip && `note__arrow--flip-${flip}`]} viewBox="0 0 120 60" aria-hidden="true" focusable="false"><path d="M110 8 C 80 4, 30 18, 10 52 M10 52 L 24 44 M10 52 L 8 36" pathLength="1" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" /></svg>
+</p>

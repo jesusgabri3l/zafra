@@ -1,0 +1,149 @@
+@use '../abstracts' as *;
+
+// Hero: campo maracuyá de 100svh, sin fijar. Titular de dos niveles con la chapa en la línea pequeña; la botella llena
+// (canvas) se para sobre el canto del brochazo de A, al 84svh. La fruta nunca cambia de opacidad (solo posición, giro y escala).
+.hero {
+  --focus: var(--tinta);
+  --note-ink: var(--mora);
+  position: relative;
+  z-index: 1;
+  height: 100svh;
+  @include paper(var(--maracuya), true);
+  color: var(--tinta);
+
+  &__content {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2svh;
+    align-items: center;
+    justify-content: center;
+    padding: calc(var(--navbar-height) + 16px) var(--m) 24svh;
+    text-align: center;
+
+    @include until-tablet {
+      justify-content: flex-start; // titular arriba: la botella ocupa la mitad de abajo
+      padding-top: calc(var(--navbar-height) + 4svh);
+    }
+  }
+
+  &__kicker {
+    @include display-font(clamp(28px, 3.6vw, 60px), 1);
+    color: var(--vino); // 7.3:1 sobre maracuyá; el titular en tinta queda como el único tono más oscuro
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25em;
+    align-items: center;
+    justify-content: center;
+    max-width: 18ch;
+
+    @include from-tablet {
+      max-width: none;
+    }
+  }
+
+  // Hueco de la chapa: 1.6 veces el alto de la línea. Con scroll lo llena la chapa fija (.nail); sin él, esta imagen.
+  &__logo {
+    flex: none;
+    width: 1.6em;
+    height: 1.6em;
+  }
+
+  &__logo-fallback {
+    width: 100%;
+
+    .is-scrub & {
+      visibility: hidden;
+    }
+  }
+
+  &__title {
+    @include display-font(min(22vw, 34svh), 0.82);
+
+    @include until-tablet {
+      font-size: min(19vw, 20svh);
+    }
+
+    @include from-tablet {
+      font-size: min(15vw, 34svh);
+    }
+
+    @media (min-width: 1100px) {
+      font-size: min(24vw, 34svh);
+    }
+  }
+
+  &__line {
+    display: block;
+  }
+
+  // La nota apunta a la botella, que se para a la derecha sobre el canto del brochazo.
+  &__note {
+    position: absolute;
+    top: 13svh;
+    left: 5%;
+
+    @include until-tablet {
+      left: var(--m);
+      top: 66svh;
+    }
+  }
+
+  &__fruit {
+    position: absolute;
+    top: calc(84svh + 5vw); // el canto de A sube hacia la derecha (-4°): a la izquierda queda 5vw más abajo
+    left: 13%;
+    translate: -50% -100%;
+  }
+
+  &__fruit-box {
+    position: relative;
+  }
+
+  &__whole {
+    visibility: hidden;
+  }
+
+  &__half,
+  &__drop {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    visibility: hidden;
+    max-width: none;
+  }
+
+  // Fondo pintado: detrás del texto y la botella. Los trazos se pintan al cargar (intro.ts) y se quedan.
+  &__brush {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+
+    .is-scrub & .stroke {
+      --p: 0; // sin pintar hasta que intro.ts los pinta
+    }
+  }
+
+  // Hueco de la botella solo en movimiento reducido (con scroll la mueve el timeline).
+  &__bottle-slot {
+    position: absolute;
+    top: 28svh;
+    left: 66%;
+    height: 56svh;
+    aspect-ratio: 0.42;
+    translate: -50% 0;
+
+    .is-scrub & {
+      display: none;
+    }
+  }
+}
+
+html:not([data-ready]) .hero__content,
+html:not([data-ready]) .hero__note,
+html:not([data-ready]) .hero__fruit {
+  visibility: hidden;
+}

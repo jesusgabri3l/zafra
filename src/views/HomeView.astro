@@ -1,0 +1,39 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import TheNavbar from '../components/layout/TheNavbar.astro';
+import TheFooter from '../components/layout/TheFooter.astro';
+import HomeHero from '../components/home/HomeHero.astro';
+import HomeManifesto from '../components/home/HomeManifesto.astro';
+import HomeSpout from '../components/home/HomeSpout.astro';
+import HomeFill from '../components/home/HomeFill.astro';
+import HomeFlavors from '../components/home/HomeFlavors.astro';
+import HomeSlice from '../components/home/HomeSlice.astro';
+import HomeOrder from '../components/home/HomeOrder.astro';
+import BaseCap from '../components/base/BaseCap.astro';
+import { FLAVORS } from '../data/flavors';
+import { SITE } from '../config/site';
+---
+
+<BaseLayout title={SITE.title} description={SITE.description}>
+  <TheNavbar />
+  <main id="contenido">
+    <!-- Paso horizontal hero -> A (styles/components/_pass.scss, story.ts): los dos van fijos y A entra por la derecha. -->
+    <div class="pass" data-pass>
+      <HomeHero />
+      <HomeManifesto />
+    </div>
+    <HomeSpout />
+    <HomeFill />
+    <HomeFlavors />
+    <HomeSlice />
+    <HomeOrder />
+  </main>
+  <!-- La botella es decorativa: el sabor y las cantidades se leen en el selector. -->
+  <div class="bottle-stack" data-bottle-stack aria-hidden="true" inert></div>
+  <div class="nail" data-nail aria-hidden="true" inert><BaseCap class="nail__cap" flavor={FLAVORS.find(({ id }) => id === 'maracuya')!} data-nail-cap /></div>
+  <TheFooter />
+</BaseLayout>
+
+<script>
+  import '../scripts/home';
+</script>

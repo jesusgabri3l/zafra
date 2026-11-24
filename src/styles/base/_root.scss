@@ -1,0 +1,45 @@
+:root {
+  --tinta: #2b0a1f;
+  --mora: #5c1236;
+  --mora-honda: #3d0b24;
+  --vino: #6e1030;
+  --espuma: #fff3de;
+  --rosa-mora: #e6b4c4;
+  --maracuya: #ffc21a;
+  --ambar: #e8a008;
+  --mandarina: #ff7a1a;
+  --guayaba: #ff6b6b;
+  --lulo: #a9d13f;
+  --hielo: #cdebea;
+  --crema: #f3e6c8;
+
+  --font-body: 'Bricolage Grotesque Variable', system-ui, sans-serif;
+  --m: clamp(16px, 2.5vw, 40px);
+  --navbar-height: 56px;
+  --arc: 8vw; // alto de los arcos entre capítulos
+  --fruit-scale: 0.6; // las frutas de gouache en móvil
+
+  scrollbar-color: var(--maracuya) var(--tinta);
+  scrollbar-width: thin;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --navbar-height: 64px;
+    --fruit-scale: 1;
+  }
+}
+
+// Safari y Chrome viejos (los nuevos usan scrollbar-color).
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--tinta);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--maracuya);
+}

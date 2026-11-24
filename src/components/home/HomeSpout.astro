@@ -1,0 +1,21 @@
+---
+// El chorro: divisor mora / mandarina. Una banda gruesa y ondulada con el marquee (scripts/spout.ts dibuja la ruta).
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const unit = 'FRUTA · PANELA · GAS · FRÍO · ';
+---
+
+<div class="spout" data-analytics-section="spout" aria-hidden="true">
+  <div class="spout__half spout__half--top" data-bar="dark"></div>
+  <div class="spout__half spout__half--bottom" data-bar="light"></div>
+  <svg class="spout__svg" data-spout focusable="false">
+    <defs>
+      <pattern id="spout-grain" patternUnits="userSpaceOnUse" width="512" height="512"><image href={`${base}/img/papel.webp`} width="512" height="512" /></pattern>
+      <clipPath id="spout-clip"><path data-spout-clip></path></clipPath>
+    </defs>
+    <path class="spout__shadow" data-spout-shadow></path>
+    <path class="spout__band" data-spout-band></path>
+    <path class="spout__grain" data-spout-band></path>
+    <path id="spout-path" fill="none" data-spout-path />
+    <g clip-path="url(#spout-clip)"><text class="spout__text"><textPath href="#spout-path" data-spout-text>{unit.repeat(14)}</textPath></text></g>
+  </svg>
+</div>

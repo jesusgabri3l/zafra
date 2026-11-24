@@ -1,0 +1,184 @@
+@use '../abstracts' as *;
+
+// Footer: el cielo (#31061C) es el fondo y se funde con el paisaje completo, que ocupa la mitad de abajo a ancho completo.
+// Arriba, sobre el color liso: marca a la izquierda, columnas de enlaces a la derecha, línea fina y la fila legal.
+.footer {
+  --focus: var(--maracuya);
+  position: relative;
+  z-index: 6; // el rasgado de arriba cuelga sobre D
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: calc(100vw * 0.45); // alto del paisaje: la foto llena todo el footer
+  padding: 10svh var(--m) 20px; // el contenido va sobre el paisaje (aspecto 0,45); su cielo es oscuro
+  overflow-x: clip; // overflow-y visible: el rasgado sale por arriba
+  background: #31061c;
+
+  @include until-tablet {
+    padding-bottom: 28svh; // deja ver el paisaje debajo de las columnas
+  }
+  color: var(--espuma);
+
+  > .tear {
+    --tear: clamp(40px, 7svh, 72px);
+    --tear-color: #31061c;
+    --tear-grain: 0; // el footer es color liso
+  }
+
+  &__landscape {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    pointer-events: none;
+
+    // El borde de arriba de la foto se funde con el fondo: sin corte entre color liso y cielo.
+    img {
+      display: block;
+      width: 100%;
+      height: auto;
+      mask-image: linear-gradient(to bottom, transparent, #000 22%);
+      -webkit-mask-image: linear-gradient(to bottom, transparent, #000 22%);
+
+      @include until-tablet {
+        height: 42svh;
+        object-fit: cover;
+        object-position: 30% 100%;
+      }
+    }
+  }
+
+  // Velo sutil arriba: el cielo y las puntas del paisaje se oscurecen detrás de las columnas para que el texto se lea.
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto;
+    z-index: 1;
+    height: 70%;
+    background: linear-gradient(to bottom, rgb(49 6 28 / 0.85) 40%, transparent);
+    pointer-events: none;
+  }
+
+  // Velo oscuro abajo: la fila legal se lee sobre el follaje.
+  &::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 0;
+    z-index: 1;
+    height: 120px;
+    background: linear-gradient(to top, #31061c 15%, transparent);
+    pointer-events: none;
+  }
+
+  &__top,
+  &__legal {
+    position: relative;
+    z-index: 2;
+    text-shadow: 0 1px 8px rgb(49 6 28 / 0.6);
+  }
+
+  &__top {
+    position: relative;
+    display: grid;
+    gap: 48px;
+
+    @include from-tablet {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+      gap: 64px;
+      padding-right: clamp(0px, 9vw, 160px); // aire frente al bambú de la ilustración
+    }
+  }
+
+  &__brand {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: flex-start;
+    max-width: 38ch;
+  }
+
+  &__logo {
+    width: clamp(140px, 14vw, 200px);
+    height: auto;
+  }
+
+  &__about {
+    color: var(--crema);
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  &__social {
+    display: flex;
+    gap: 12px;
+  }
+
+  &__icon {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border: 1px solid color-mix(in oklab, var(--crema) 40%, transparent);
+    border-radius: 50%;
+    color: var(--crema);
+
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    &:hover,
+    &:focus-visible {
+      border-color: var(--maracuya);
+      color: var(--maracuya);
+    }
+  }
+
+  &__columns {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 32px;
+  }
+
+  &__heading {
+    margin-bottom: 16px;
+    color: var(--maracuya);
+    @include label-font(13px);
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  &__link {
+    display: inline-block;
+    padding-block: 6px;
+    color: var(--crema);
+    font-size: 15px;
+    text-decoration: none;
+
+    &:hover,
+    &:focus-visible {
+      color: var(--maracuya);
+      text-decoration: underline;
+      text-underline-offset: 4px;
+    }
+  }
+
+  &__legal {
+    position: relative;
+    z-index: 2; // encima del velo de abajo (::after, z 1)
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 32px;
+    justify-content: space-between;
+    max-width: none;
+    margin-top: 48px;
+    padding-top: 20px;
+    border-top: 1px solid color-mix(in oklab, var(--crema) 25%, transparent);
+    color: var(--crema);
+    font-size: 14px;
+  }
+}

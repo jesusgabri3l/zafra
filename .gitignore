@@ -1,0 +1,14 @@
+dist/
+.astro/
+node_modules/
+.env
+fuentes/
+
+# site-audit: estrategia SEO fuera del repo
+.seo/
+
+# Notas internas del proceso (no van al repo público)
+ESTADO.md
+PLAN.md
+design-brief.md
+referencia-sweet-tape/

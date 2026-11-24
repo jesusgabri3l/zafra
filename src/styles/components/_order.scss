@@ -1,0 +1,199 @@
+@use '../abstracts' as *;
+
+// D. Arma tu six-pack: campo mora (la última banda de la rodaja). La botella a la izquierda y el pedido dentro de una
+// tarjeta squircle grande de maracuyá con texto tinta (11.14).
+.order {
+  position: relative;
+  z-index: 5; // encima de la hoja de la rodaja (4)
+  display: grid;
+  gap: 32px;
+  padding: 32px var(--m) 96px;
+  @include paper-dark(var(--mora), true);
+  color: var(--espuma);
+  overflow-x: clip; // las letras del título llegan dispersas desde fuera de la pantalla
+
+  // D sube pegada a la hoja (mismo borde, 1:1 con el scroll) y aterrisa cuando la hoja termina: arranca donde acaba el sticky de .slice.
+  .is-scrub & {
+    margin-top: -100svh;
+  }
+
+  // Brochazos de fondo (estáticos): debajo de la tarjeta y la botella, sin desbordar a lo ancho.
+  &__back {
+    position: absolute;
+    inset: 0;
+    overflow: clip;
+    pointer-events: none;
+  }
+
+  &__card,
+  &__bottle {
+    position: relative;
+    z-index: 1;
+  }
+
+  @include from-tablet {
+    grid-template-columns: 1fr max(34vw, 340px);
+    gap: 48px;
+    align-items: start;
+    min-height: 130svh; // la botella y la tarjeta se quedan fijas lo justo antes de bajar al footer
+  }
+
+  // Hueco donde se monta la botella 3D (canvas fijo; ver scripts/bottle).
+  &__bottle {
+    justify-self: center;
+    height: 40svh;
+    aspect-ratio: 0.42;
+
+    @include from-tablet {
+      position: sticky;
+      top: 14svh;
+      height: min(72svh, 620px);
+    }
+  }
+
+  &__card {
+    --focus: var(--tinta);
+    --note-ink: var(--mora);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    align-items: flex-start;
+    padding: 24px 20px;
+    border-radius: 36px;
+    @include card-cream(var(--mora));
+    color: var(--tinta);
+
+    @include from-tablet {
+      position: sticky;
+      top: 10svh;
+      padding: 28px 32px;
+    }
+  }
+
+  &__title {
+    @include display-font(clamp(40px, 4.4vw, 72px));
+    max-width: 100%;
+  }
+
+  &__lead {
+    color: var(--mora);
+  }
+
+  &__flavors {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    width: 100%;
+  }
+
+  &__cart {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    padding-top: 14px;
+    border-top: 3px solid var(--tinta);
+  }
+
+  &__summary {
+    display: flex;
+    gap: 12px;
+    align-items: baseline;
+  }
+
+  &__price {
+    @include display-font(28px, 1);
+  }
+
+  &__hint {
+    min-height: 1.5em;
+    color: var(--mora);
+    font-size: 15px;
+  }
+
+  // Tinta con texto maracuyá (11.14) sobre la tarjeta.
+  &__submit {
+    --button-bg: var(--tinta);
+    --button-ink: var(--maracuya);
+    width: 100%;
+    min-height: 52px;
+    padding-block: 12px;
+
+    @include until-tablet {
+      position: sticky;
+      bottom: 16px;
+    }
+  }
+}
+
+.order-flavor {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+
+  // La chapa de maracuyá sobre la tarjeta maracuyá se perdería: lleva un anillo tinta de 3 px.
+  &__cap {
+    width: 64px;
+    aspect-ratio: 1;
+    padding: 0;
+    border: 3px solid var(--tinta);
+    border-radius: 50%;
+    background: none;
+
+    .cap {
+      width: 100%;
+    }
+
+    &[aria-pressed='true'] {
+      box-shadow:
+        0 0 0 4px var(--crema),
+        0 0 0 7px var(--tinta);
+    }
+  }
+
+  &__name {
+    @include label-font(12px);
+  }
+
+  &__stepper {
+    display: flex;
+    gap: 2px;
+    align-items: center;
+  }
+
+  &__step {
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border: 2px solid var(--tinta);
+    border-radius: 50%;
+    background: none;
+    color: var(--tinta);
+    font-size: 20px;
+    line-height: 1;
+
+    @include from-tablet {
+      width: 40px;
+      height: 40px;
+      font-size: 22px;
+    }
+
+    &:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+  }
+
+  &__count {
+    min-width: 1.5ch;
+    font-weight: 800;
+    font-size: 20px;
+    text-align: center;
+
+    @include from-tablet {
+      font-size: 22px;
+    }
+  }
+}

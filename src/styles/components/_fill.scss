@@ -1,0 +1,204 @@
+@use '../abstracts' as *;
+
+// B. Llenado: mandarina con tinta (6.91). Cierra con un arco convexo (hombro de botella) sobre maracuyá.
+// Con scroll mide 130svh y el contenido queda fijo los primeros 30.
+.fill {
+  --focus: var(--tinta);
+  --note-ink: var(--tinta);
+  --bottle-h: 52svh;
+  --tear-room: clamp(100px, 16svh, 170px); // el rasgado de C cubre el borde de abajo: nada va ahí
+  position: relative;
+  z-index: 2;
+  margin-top: -$seam-overlap; // solapa el chorro (ver $seam-overlap)
+  @include paper(var(--mandarina), true);
+  color: var(--tinta);
+
+  @include from-tablet {
+    --bottle-h: 64svh;
+  }
+
+  .is-scrub & {
+    height: 130svh;
+  }
+
+  &__sticky {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    align-items: center;
+    min-height: 100svh;
+    padding: 96px var(--m) calc(var(--tear-room) + 48px);
+    justify-content: flex-start;
+
+    @include from-tablet {
+      align-items: flex-start;
+      padding-left: calc(var(--m) * 2);
+    }
+
+    .is-scrub & {
+      position: sticky;
+      top: 0;
+      height: 100svh;
+      padding-bottom: 96px;
+      overflow: hidden; // los cubos arrancan arriba de la pantalla: que no se vean sobre A
+    }
+  }
+
+  &__title {
+    @include display-font(clamp(104px, min(18vw, 27svh), 300px), 0.98); // 0.98: la tilde de la Í cabe sin tocar "LA MÁS"
+    position: relative;
+    text-align: left; // la botella va a la derecha: nunca tapa el titular
+  }
+
+  // Pastillas DEBAJO del titular, con la nota a su lado: todo en flujo, nada se solapa.
+  &__row {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 100%;
+    margin-top: 8px;
+
+    @media (min-width: 1100px) {
+      flex-direction: row;
+      gap: 40px;
+      align-items: center;
+    }
+  }
+
+  &__ingredients {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    max-width: 22rem;
+    padding-block: 8px;
+
+    @include from-tablet {
+      flex-wrap: nowrap;
+      max-width: none;
+    }
+  }
+
+  &__ingredient {
+    flex: none;
+    rotate: var(--tilt);
+  }
+
+  &__annotation {
+    padding-bottom: 28px; // la flecha de la nota cuelga debajo del texto
+  }
+
+  // Cubos de hielo en gouache que caen alrededor de la botella (story.ts les da la Caída).
+  &__ice {
+    position: absolute;
+    inset: 0 0 var(--tear-room);
+    pointer-events: none;
+  }
+
+  &__cube {
+    filter: drop-shadow(8px 10px 0 var(--tinta));
+    position: absolute;
+    left: var(--mx);
+    top: var(--my);
+    max-width: none;
+
+    @include from-tablet {
+      left: var(--x);
+      top: var(--y);
+    }
+  }
+
+  &__cube--extra {
+    @include until-tablet {
+      display: none;
+    }
+  }
+
+  // La chapa tirada entre el hielo, cortada por el borde de abajo.
+  &__cap {
+    width: clamp(110px, 11vw, 170px);
+  }
+
+  // Hueco de la botella solo en movimiento reducido.
+  &__bottle-slot {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    height: var(--bottle-h);
+    aspect-ratio: 0.42;
+    translate: -50% -50%;
+    pointer-events: none;
+
+    .is-scrub & {
+      display: none;
+    }
+  }
+}
+
+// Botón circular: anillo de texto que gira y centro maracuyá.
+.ring-button {
+  position: absolute; // libre de la botella en todos los tamaños
+  bottom: calc(var(--tear-room) + 8px);
+  left: var(--m);
+  display: grid;
+  place-items: center;
+  width: 88px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  color: var(--tinta);
+  text-decoration: none;
+
+  @include from-tablet {
+    right: var(--m);
+    left: auto;
+    bottom: var(--tear-room);
+    width: clamp(110px, 9vw, 140px);
+  }
+
+  &__ring {
+    position: absolute;
+    inset: 0;
+    animation: ring-spin 12s linear infinite;
+
+    text {
+      fill: currentcolor;
+      font-weight: 700;
+      font-stretch: 85%;
+      font-size: 15px;
+      letter-spacing: 0.06em;
+    }
+  }
+
+  &__core {
+    display: grid;
+    place-items: center;
+    width: 52%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--maracuya);
+    font-size: 28px;
+    line-height: 1;
+    transition: scale 200ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  &:hover &__core,
+  &:focus-visible &__core {
+    scale: 1.15;
+  }
+
+  @include reduced-motion {
+    &__ring {
+      animation: none;
+    }
+
+    &__core {
+      transition: none;
+    }
+  }
+}
+
+@keyframes ring-spin {
+  to {
+    rotate: 360deg;
+  }
+}

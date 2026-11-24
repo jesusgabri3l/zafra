@@ -1,0 +1,303 @@
+@use '../abstracts' as *;
+
+// C. Sabores en zigzag: maracuyá con tinta (11.14). Con scroll (html.is-scrub) una pista horizontal fija 360svh con las palabras a
+// distintas alturas (abajo, arriba, abajo), flechas, números, notas, tarjetas y chapas; sin él, apiladas.
+.flavors {
+  --focus: var(--tinta);
+  --note-ink: var(--mora);
+  position: relative;
+  z-index: 3; // el rasgado de arriba cuelga sobre B
+  padding: 64px 0 96px;
+  @include paper(var(--maracuya), true);
+  color: var(--tinta);
+
+  .is-scrub & {
+    padding-bottom: 0;
+  }
+
+  // B -> C: la hoja maracuyá cuelga sobre B con su borde rasgado.
+  > .tear {
+    --tear: clamp(44px, 7svh, 80px);
+    --tear-color: var(--maracuya);
+  }
+
+  &__intro {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    align-items: center;
+    padding-inline: var(--m);
+    text-align: center;
+
+    .is-scrub & {
+      padding-bottom: 0;
+    }
+  }
+
+  &__title {
+    @include display-font(clamp(48px, 6vw, 96px));
+    max-width: 14ch;
+  }
+
+  &__pin {
+    .is-scrub & {
+      height: 400svh;
+    }
+  }
+
+  &__sticky {
+    .is-scrub & {
+      position: sticky;
+      top: 0;
+      height: 100svh;
+      overflow: hidden;
+    }
+  }
+
+  // La pista ocupa toda la pantalla y todo sale de cuadro con un corte limpio (sin máscara).
+  &__window {
+    .is-scrub & {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+    }
+  }
+
+  &__track {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+    margin-top: 64px;
+
+    .is-scrub & {
+      flex-direction: row;
+      gap: 0;
+      height: 100%;
+      margin-top: 0;
+      padding-left: 12vw;
+      will-change: transform;
+    }
+  }
+
+  // Hueco entre palabras: la flecha a mano que se dibuja con el scroll (story.ts le pone viewBox y trazo en px) y por la que viaja la botella.
+  &__gap {
+    position: relative;
+    display: none;
+    flex: none;
+    width: 55vw;
+    height: 100%;
+
+    .is-scrub & {
+      display: block;
+    }
+  }
+
+  &__arrow {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    color: var(--tinta);
+    overflow: visible;
+  }
+}
+
+.flavors-item {
+  --card-1-top: 24svh;
+  --card-w: clamp(150px, 22vw, 320px);
+  --postal-w: min(80vw, 420px);
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  align-items: center;
+  justify-content: center;
+  padding-inline: var(--m);
+
+  .is-scrub & {
+    // Palabra arriba (MORA): palabra en 6-44svh, nota y postal en la mitad de abajo.
+    --card-1-top: 56svh;
+    --postal-w: 64vw;
+    --postal-top: 54svh;
+    --note-top: 46svh;
+    flex: none;
+    flex-wrap: nowrap;
+    height: 100%;
+    padding: 6svh 0 0;
+
+    @include until-tablet {
+      padding-top: 13svh; // deja sitio al número bajo la barra
+    }
+    align-items: flex-start;
+    justify-content: flex-start;
+
+    @include from-tablet {
+      --postal-w: 26vw;
+    }
+  }
+
+  &--bottom {
+    .is-scrub & {
+      // Palabra abajo (MARACUYÁ, LULO): palabra en 54-96svh, tarjeta, postal y nota en la mitad de arriba.
+      --card-1-top: 2svh;
+      --postal-top: 8svh;
+      --note-top: 44svh;
+      align-items: flex-end;
+      padding: 0 0 4svh;
+    }
+  }
+
+  &__word {
+    @include display-font(clamp(72px, 19vw, 320px), 0.82);
+    flex: 0 0 100%;
+    text-align: center;
+
+    .is-scrub & {
+      flex: none;
+      font-size: min(24vw, 46svh);
+      line-height: 0.82;
+      white-space: nowrap;
+
+      @include from-tablet {
+        font-size: min(30vw, 46svh);
+      }
+    }
+  }
+
+  // Número en círculo a mano, antes de la palabra.
+  &__number {
+    display: none;
+    place-items: center;
+    width: 56px;
+    height: 56px;
+    border: 3px solid var(--mora);
+    border-radius: 50%;
+    color: var(--mora);
+    font-family: var(--font-hand), cursive;
+    font-weight: 600;
+    font-size: 32px;
+    line-height: 1;
+
+    .is-scrub & {
+      position: absolute;
+      top: 1svh;
+      left: 0;
+      display: grid;
+
+      @include until-tablet {
+        top: calc(var(--navbar-height) + 6px); // bajo la barra
+        width: 36px;
+        height: 36px;
+        font-size: 22px;
+      }
+    }
+
+    .is-scrub .flavors-item--bottom & {
+      top: 52svh;
+    }
+  }
+
+  // Tarjeta crema squircle con la fruta, que se sale por arriba; solo desktop con scroll (en móvil la postal ocupa el lugar).
+  &__card {
+    @include card-cream(var(--maracuya), var(--tinta));
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    width: clamp(150px, 18vw, 280px);
+    aspect-ratio: 1 / 1.15;
+    border-radius: 40px;
+    rotate: var(--tilt);
+
+    .is-scrub & {
+      position: absolute;
+      z-index: 2;
+      width: var(--card-w);
+      top: var(--card-1-top);
+      left: calc(var(--card-left) - var(--card-w) * 0.5);
+
+      @include until-tablet {
+        display: none;
+      }
+    }
+  }
+
+  &__fruit {
+    max-width: 85%;
+    translate: 0 -14%; // se sale por arriba de la tarjeta
+  }
+
+  // Postal: el lugar de donde viene la fruta, en una tarjeta crema con borde parejo del 3 %. Va con la pista (1:1) y pasa de ±9° a ±5° (story.ts).
+  &__postal {
+    @include card-cream(var(--maracuya), var(--tinta));
+    position: relative;
+    z-index: 1;
+    width: var(--postal-w);
+    padding: calc(var(--postal-w) * 0.03);
+    border-radius: calc(var(--postal-w) * 0.07);
+    rotate: var(--tilt);
+
+    .is-scrub & {
+      position: absolute;
+      top: var(--postal-top);
+      left: var(--postal-left);
+    }
+  }
+
+  &__postal-image {
+    width: 100%;
+    height: auto;
+    border-radius: calc(var(--postal-w) * 0.045);
+  }
+
+  // La chapa es la estampilla: en la esquina de arriba a la derecha de la postal; rueda en 2D con la distancia (story.ts).
+  &__stamp {
+    position: absolute;
+    top: -9%;
+    right: -6%;
+    z-index: 3;
+    width: 14vw;
+    rotate: 12deg;
+    filter: drop-shadow(5px 7px 0 var(--tinta));
+
+    @include from-tablet {
+      width: 7vw;
+    }
+  }
+
+  // Nota con flecha a la postal.
+  &__note {
+    flex: 0 0 100%;
+    text-align: center;
+
+    .is-scrub & {
+      position: absolute;
+      top: var(--note-top);
+      left: calc(var(--postal-left) - 14%);
+      flex: none;
+      white-space: nowrap;
+
+      @include until-tablet {
+        left: var(--m);
+      }
+    }
+
+    // Móvil: "de ladera" quedaba en medio de la pantalla apuntando a la nada; se corre hacia la izquierda.
+    .is-scrub .flavors-item--lulo & {
+      @include until-tablet {
+        left: calc(var(--m) - 22vw);
+      }
+    }
+  }
+
+  // Hueco de la botella solo en movimiento reducido.
+  &__bottle-slot {
+    flex: 0 0 100%;
+    height: 44svh;
+    margin-inline: auto;
+    aspect-ratio: 0.42;
+
+    .is-scrub & {
+      display: none;
+    }
+  }
+}

@@ -1,0 +1,16 @@
+@use '../abstracts' as *;
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: var(--tinta);
+  color: var(--maracuya);
+  @include label-font(13px);
+
+  &--light {
+    background: var(--espuma);
+    color: var(--tinta);
+  }
+}

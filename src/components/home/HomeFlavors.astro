@@ -1,0 +1,39 @@
+---
+import BasePill from '../base/BasePill.astro';
+import BaseTear from '../base/BaseTear.astro';
+import HomeFlavorsItem from './HomeFlavorsItem.astro';
+import { FLAVORS } from '../../data/flavors';
+
+const fruits = { mora: 'moras', maracuya: 'maracuya-mitad-1', lulo: 'lulo-2' } as const;
+// Orden de la pista: MARACUYÁ (abajo) -> MORA (arriba) -> LULO (abajo).
+const levels = ['bottom', 'top', 'bottom'] as const;
+---
+
+<section class="flavors" data-bar="light" data-analytics-section="flavors" aria-labelledby="sabores-titulo">
+  <BaseTear light />
+  <div class="flavors__intro">
+    <BasePill>Tres frutas</BasePill>
+    <h2 class="flavors__title" id="sabores-titulo">Para la tarde que pide algo frío.</h2>
+  </div>
+  <div class="flavors__pin" data-flavors-pin>
+    <div class="flavors__sticky">
+      <div class="flavors__window">
+      <ul class="flavors__track" data-flavors-track>
+        {FLAVORS.map((flavor, index) => (
+          <Fragment>
+            <HomeFlavorsItem flavor={flavor} index={index} level={levels[index]} fruit={fruits[flavor.id as keyof typeof fruits]} />
+            {index < FLAVORS.length - 1 && (
+              <li class={`flavors__gap flavors__gap--${levels[index]}`} data-flavor-gap aria-hidden="true">
+                <svg class="flavors__arrow" focusable="false">
+                  <path data-arrow fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" />
+                  <path data-arrow-head fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </li>
+            )}
+          </Fragment>
+        ))}
+      </ul>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,32 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+import sizes from '../../data/fruits.json';
+
+// Fruta en gouache (WebP con alfa, 1x/2x). `width` = ancho en pantalla en px (desktop); en móvil lo escala --fruit-scale.
+interface Props extends HTMLAttributes<'img'> {
+  name: keyof typeof sizes;
+  width?: number;
+  /** Decodificar antes de la intro (solo hero). */
+  preload?: boolean;
+}
+
+const { name, width, preload = false, class: className, style, ...attributes } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const size = sizes[name];
+const shown = width ?? size.width / 2;
+---
+
+<img
+  class:list={['fruit', className]}
+  src={`${base}/img/${name}-2x.webp`}
+  srcset={`${base}/img/${name}-1x.webp 1x, ${base}/img/${name}-2x.webp 2x`}
+  width={size.width}
+  height={size.height}
+  style={`width:calc(${shown}px * var(--fruit-scale, 1));height:auto;${style ?? ''}`}
+  alt=""
+  decoding="async"
+  loading={preload ? 'eager' : 'lazy'}
+  fetchpriority={preload ? 'high' : 'auto'}
+  {...(preload ? { 'data-preload': true } : {})}
+  {...attributes}
+/>

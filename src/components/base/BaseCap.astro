@@ -1,0 +1,14 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+import type { Flavor } from '../../data/flavors';
+
+// Chapa corona de un sabor: gouache (fuentes/chapas-gouache), WebP con alfa. Decorativa (alt vacío).
+interface Props extends HTMLAttributes<'img'> {
+  flavor: Flavor;
+}
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const { flavor, class: className, ...attributes } = Astro.props;
+---
+
+<img class:list={['cap', className]} src={`${base}/img/chapas/${flavor.id}-frente.webp`} width="400" height="400" alt="" decoding="async" {...attributes} />

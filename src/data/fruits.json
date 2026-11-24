@@ -1,0 +1,62 @@
+{
+  "maracuya-entera": {
+    "width": 560,
+    "height": 512
+  },
+  "maracuya-mitad-1": {
+    "width": 600,
+    "height": 580
+  },
+  "maracuya-mitad-2": {
+    "width": 600,
+    "height": 537
+  },
+  "gota-1": {
+    "width": 156,
+    "height": 146
+  },
+  "gota-2": {
+    "width": 377,
+    "height": 244
+  },
+  "gota-3": {
+    "width": 298,
+    "height": 258
+  },
+  "gota-4": {
+    "width": 400,
+    "height": 249
+  },
+  "gota-5": {
+    "width": 328,
+    "height": 239
+  },
+  "gota-6": {
+    "width": 346,
+    "height": 359
+  },
+  "lulo-2": {
+    "width": 680,
+    "height": 689
+  },
+  "moras": {
+    "width": 680,
+    "height": 568
+  },
+  "panela": {
+    "width": 680,
+    "height": 418
+  },
+  "a-pulpa": {
+    "width": 700,
+    "height": 475
+  },
+  "a-burbujas": {
+    "width": 420,
+    "height": 588
+  },
+  "hielo": {
+    "width": 480,
+    "height": 444
+  }
+}

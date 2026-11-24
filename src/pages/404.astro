@@ -1,0 +1,42 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../config/site';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<BaseLayout title={`Página no encontrada | ${SITE.name}`} description="Demo de concepto ZAFRA: soda de fruta con panela.">
+  <main class="not-found" id="contenido">
+    <h1>No hay nada aquí</h1>
+    <p>Es una demo de una sola página. Vuelve al inicio para ver ZAFRA.</p>
+    <p><a href={base || '/'}>Ir al inicio</a></p>
+  </main>
+</BaseLayout>
+
+<style lang="scss">
+  .not-found {
+    min-height: 100svh;
+    display: grid;
+    place-content: center;
+    text-align: center;
+    gap: 1rem;
+    padding: 2rem;
+    background-color: var(--maracuya);
+    color: var(--vino);
+
+    h1 {
+      font-family: var(--font-body);
+      font-weight: 800;
+      font-stretch: 75%;
+      font-size: clamp(2rem, 6vw, 3rem);
+      line-height: 0.88;
+      text-transform: uppercase;
+    }
+
+    a {
+      color: var(--vino);
+      font-weight: 600;
+      text-underline-offset: 0.2em;
+    }
+  }
+</style>

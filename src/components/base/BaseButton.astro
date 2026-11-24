@@ -1,0 +1,15 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+// Colores por --button-bg / --button-ink: el contenedor los cambia según el capítulo (ver styles/components/_button.scss).
+interface Props extends HTMLAttributes<'a'> {
+  size?: 'small' | 'large';
+  arrow?: boolean;
+}
+
+const { size, arrow = true, class: className, ...attributes } = Astro.props;
+---
+
+<a class:list={['button', size && `button--${size}`, className]} {...attributes}>
+  <slot />{arrow && <span class="button__arrow" aria-hidden="true">→</span>}
+</a>

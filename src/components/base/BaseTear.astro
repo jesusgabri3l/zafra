@@ -1,0 +1,11 @@
+---
+// Borde superior de papel rasgado: cuelga justo encima de su padre (que debe ser position: relative).
+// Capas: sombra de tinta, filo crema de fibras y la hoja con el mismo grano fijo que la sección de abajo (sin costura).
+// Color y alto salen del contenedor: `--tear-color` (mora por defecto) y `--tear`. `light`: hoja clara (grano multiply).
+const { class: className, light = false } = Astro.props;
+---
+
+<span class:list={['tear', { 'tear--light': light }, className]} aria-hidden="true">
+  <span class="tear__edge"></span>
+  <span class="tear__sheet"></span>
+</span>

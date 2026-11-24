@@ -1,0 +1,30 @@
+---
+// Titular con letras "a mano": cada una lleva un giro (-4° a 4°) y un desfase vertical (±3 %) fijos, no aleatorios.
+// Las animaciones (burbujas, armado) se montan sobre las letras con [data-char]. El texto accesible va aparte, entero.
+interface Props {
+  text: string;
+  class?: string;
+}
+
+const { text, class: className } = Astro.props;
+let index = 0;
+const hand = (position: number) => ({ rotation: ((position * 37) % 9) - 4, shift: ((position * 53) % 7) - 3 });
+const words = text.split(' ');
+---
+
+<span class:list={['letters', className]}>
+  <span class="sr-only">{text}</span>
+  <span class="letters__visual" aria-hidden="true">
+    {words.map((word, wordIndex) => (
+      <Fragment>
+        <span class="letters__word">
+          {[...word].map((char) => {
+            const { rotation, shift } = hand(index++);
+            return <span class="letters__char" data-char style={`--r:${rotation}deg;--dy:${shift}%`}>{char}</span>;
+          })}
+        </span>
+        {wordIndex < words.length - 1 && ' '}
+      </Fragment>
+    ))}
+  </span>
+</span>

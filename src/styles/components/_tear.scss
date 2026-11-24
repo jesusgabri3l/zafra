@@ -1,0 +1,103 @@
+@use 'sass:math';
+@use '../abstracts' as *;
+
+// Rasgado de papel (BaseTear): el borde sale de ruido determinista (onda suave + dientes medianos + fibra fina), no de una lista fija.
+$tear-steps: 160;
+$tear-lip: 14px; // espacio para el filo crema y la sombra encima de la hoja
+
+@function tear-hash($n) {
+  $s: math.sin($n * 12.9898 + 78.233) * 43758.5453;
+  @return $s - math.floor($s);
+}
+
+// Ruido de valor lineal: dientes en punta.
+@function tear-noise($t, $seed) {
+  $i: math.floor($t);
+  $f: $t - $i;
+  @return tear-hash($i + $seed) * (1 - $f) + tear-hash($i + 1 + $seed) * $f;
+}
+
+@function tear-k($i) {
+  $wave: 0.5 + 0.5 * math.sin($i * 0.09 + 1.3);
+  @return 0.3 * $wave + 0.35 * tear-noise(math.div($i, 7), 0) + 0.25 * tear-noise(math.div($i, 2.3), 40) + 0.1 * tear-hash($i);
+}
+
+@function tear-x($i) {
+  @if $i == 0 {
+    @return 0%;
+  }
+  @if $i == $tear-steps {
+    @return 100%;
+  }
+  @return math.div($i * 100%, $tear-steps) + (tear-hash($i + 3) - 0.5) * 0.2%;
+}
+
+// $fiber: false = borde de la hoja; true = el mismo borde subido 2-8 px (el filo crema).
+// El filo crema termina 2px antes del fondo: si llegara al borde, su fila fraccionaria asomaría bajo la hoja (línea crema).
+@function tear-polygon($fiber) {
+  $base: if($fiber, 'calc(100% - 2px)', '100%');
+  $points: '0% #{$base}';
+  @for $i from 0 through $tear-steps {
+    $y: 'calc(#{$tear-lip} + var(--tear) * #{math.div(math.round(tear-k($i) * 1000), 1000)}';
+    @if $fiber {
+      $y: '#{$y} - #{math.div(math.round((2 + 6 * tear-noise(math.div($i, 1.6), 90)) * 10), 10)}px';
+    }
+    $points: '#{$points}, #{tear-x($i)} #{$y})';
+  }
+  @return polygon(#{$points}, 100% #{$base});
+}
+
+
+.tear {
+  --tear: clamp(44px, 7svh, 80px);
+  position: absolute;
+  right: 0;
+  bottom: calc(100% - #{$seam-overlap}); // traslape con su hoja (ver $seam-overlap)
+  left: 0;
+  z-index: 1;
+  height: calc(var(--tear) + #{$tear-lip});
+  pointer-events: none;
+
+  &::before,
+  &__edge,
+  &__sheet {
+    position: absolute;
+    inset: 0;
+  }
+
+  // Sombra corta de tinta translúcida: el filo corrido arriba a la derecha.
+  &::before {
+    content: '';
+    background: rgb(24 4 14 / 30%);
+    clip-path: tear-polygon(true);
+    translate: 3px -4px;
+  }
+
+  &__edge {
+    background: var(--crema);
+    clip-path: tear-polygon(true);
+  }
+
+  &__sheet {
+    clip-path: tear-polygon(false);
+    @include paper-dark(var(--tear-color, var(--mora)), true);
+
+    &::before {
+      opacity: var(--tear-grain, 0.06);
+    }
+  }
+
+  &--light &__sheet {
+    @include paper(var(--tear-color), true);
+
+    &::before {
+      display: none;
+    }
+  }
+}
+
+// D sin scroll animado: el rasgado cuelga directo sobre C. Con scroll lo trae la hoja de la rodaja.
+html.is-scrub .order > .tear {
+  display: none;
+}
+

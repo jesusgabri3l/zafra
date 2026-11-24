@@ -1,0 +1,15 @@
+@use '../abstracts' as *;
+
+// Titulares con letras "a mano" (BaseLetters): giro y desfase fijos por letra. gsap anima x, y y rotation encima de esto.
+.letters {
+  &__word {
+    display: inline-block;
+    white-space: nowrap;
+  }
+
+  &__char {
+    display: inline-block;
+    rotate: var(--r);
+    translate: 0 var(--dy);
+  }
+}

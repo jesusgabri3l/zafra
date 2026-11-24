@@ -1,0 +1,46 @@
+@use 'sass:list';
+@use '../abstracts' as *;
+
+// Frente de pintura irregular: cada punto del borde de avance se adelanta o se atrasa (% del ancho), como cerdas desparejas.
+$front-jitter: (0, 3, -2, 5, -4, 1, 6, -1, 3, -5, 2, 4);
+
+@function paint-reveal() {
+  $points: '-50% -60%';
+  @for $i from 0 through 22 {
+    $jitter: list.nth($front-jitter, ($i % list.length($front-jitter)) + 1);
+    $points: '#{$points}, calc(var(--p) * 112% - 6% + #{$jitter}%) #{-60 + $i * 7.5}%';
+  }
+  @return polygon(#{$points}, -50% 110%);
+}
+
+// Brochazo (BaseStroke): una sola máscara de pincel (brochazo.webp) teñida con --tone.
+// --p (0 a 1) lo pinta de izquierda a derecha: el recorte solo avanza por el frente (irregular); arriba y abajo el borde de pincel queda entero.
+.stroke {
+  --p: 1;
+  clip-path: paint-reveal();
+  position: absolute;
+  left: calc(50% - var(--w) / 2); // sin translate: GSAP mueve el trazo con transform
+  top: calc(var(--top) - var(--h) / 2);
+  width: var(--w);
+  height: var(--h);
+  rotate: var(--tilt);
+
+  &__paint {
+    position: absolute;
+    inset: 0;
+    scale: var(--flip) 1;
+    mask: var(--img-brochazo) center / 100% 100% no-repeat;
+    -webkit-mask: var(--img-brochazo) center / 100% 100% no-repeat;
+    @include paper(var(--tone));
+  }
+
+  &--vino &__paint,
+  &--mora-honda &__paint {
+    @include paper-dark(var(--tone));
+  }
+}
+
+// Brochazos de la entrada (hero y el canto mora de A): sin pintar hasta que intro.ts los pinta, en orden del documento.
+.is-scrub [data-hero-stroke] {
+  --p: 0;
+}

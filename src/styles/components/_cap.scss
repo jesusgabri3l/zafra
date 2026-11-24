@@ -1,0 +1,7 @@
+@use '../abstracts' as *;
+
+// Chapa corona del DOM: render con alfa (BaseCap).
+.cap {
+  height: auto; // el ancho lo fija cada contenedor (chapa del footer, del zigzag, de la tarjeta...)
+  aspect-ratio: 1;
+}

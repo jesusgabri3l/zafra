@@ -1,0 +1,21 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+// Brochazo de color: una máscara de pincel teñida. Se mueve entero (nunca se recorta), así el borde de pincel se ve todo el tiempo.
+// Los hijos (fruta, chapa) viajan con el trazo. `flip` espeja el pincel (la punta deshilachada queda a la izquierda).
+interface Props extends HTMLAttributes<'div'> {
+  tone: 'vino' | 'mora-honda' | 'ambar' | 'hielo';
+  tilt?: number;
+  top?: string;
+  width?: string;
+  height?: string;
+  flip?: boolean;
+}
+
+const { tone, tilt = 0, top = '50%', width = '160vw', height = '60svh', flip = false, class: className, style, ...attributes } = Astro.props;
+---
+
+<div class:list={['stroke', `stroke--${tone}`, className]} style={`--tone:var(--${tone});--tilt:${tilt}deg;--top:${top};--w:${width};--h:${height};--flip:${flip ? -1 : 1};${style ?? ''}`} {...attributes}>
+  <span class="stroke__paint"></span>
+  <slot />
+</div>

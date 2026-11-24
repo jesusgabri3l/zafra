@@ -1,0 +1,58 @@
+---
+import BasePill from '../base/BasePill.astro';
+import BaseCap from '../base/BaseCap.astro';
+import BaseFruit from '../base/BaseFruit.astro';
+import BaseNote from '../base/BaseNote.astro';
+import { FLAVORS } from '../../data/flavors';
+
+const ingredients = ['Pulpa', 'Panela', 'Gas', 'Nada más'];
+const tilts = [-2, 2, -2, 2];
+// Hielo en grilla: 3 cubos agrupados en la base de la botella y 2 sueltos arriba (lejos del titular y del botón). % de la zona de hielo;
+// `mx`/`my` son la posición en móvil (la botella va ahí más a la derecha). `extra`: solo desktop.
+const ice = [
+  { x: 73, y: 91, mx: 55, my: 90, rotation: -12, width: 150, big: true },
+  { x: 86, y: 92, mx: 86, my: 91, rotation: 10, width: 120, flip: true, big: true },
+  { x: 79.5, y: 88, mx: 70, my: 95, rotation: -4, width: 96 },
+  { x: 62, y: 14, mx: 88, my: 14, rotation: 10, width: 90, flip: true },
+  { x: 93, y: 24, mx: 0, my: 0, rotation: 20, width: 76, extra: true },
+] as const;
+---
+
+<section class="fill" data-bar="light" data-analytics-section="fill" aria-labelledby="llenado-titulo">
+  <div class="fill__sticky" data-fill>
+    <BasePill class="fill__pill">Adentro</BasePill>
+    <h2 class="fill__title" id="llenado-titulo">
+      La más<br />fría
+    </h2>
+
+    <div class="fill__row">
+      <ul class="fill__ingredients" aria-label="Ingredientes">
+        {ingredients.map((name, index) => (
+          <li class="pill fill__ingredient" style={`--tilt:${tilts[index]}deg`}>{name}</li>
+        ))}
+      </ul>
+      <div class="fill__annotation" data-fill-note>
+        <BaseNote class="fill__note" flip="x" scrubbed>así llega: sudando frío</BaseNote>
+      </div>
+    </div>
+
+    <a class="ring-button" href="#pedido">
+      <span class="sr-only">PRUÉBALA · ir a armar tu six-pack</span>
+      <svg class="ring-button__ring" viewBox="0 0 200 200" aria-hidden="true" focusable="false">
+        <defs><path id="ring-path" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0" /></defs>
+        <text aria-hidden="true"><textPath href="#ring-path" textLength="480">PRUÉBALA · PIDE TU SIX-PACK · </textPath></text>
+      </svg>
+      <span class="ring-button__core" aria-hidden="true">↘</span>
+    </a>
+
+    <div class="fill__ice" aria-hidden="true">
+      {ice.map((cube) => (
+        <BaseFruit class:list={['fill__cube', { 'fill__cube--extra': 'extra' in cube }]} name="hielo" width={cube.width} data-ice data-big={'big' in cube ? '' : undefined} data-rotation={cube.rotation} style={`--x:${cube.x}%;--y:${cube.y}%;--mx:${cube.mx}%;--my:${cube.my}%;${'flip' in cube ? 'scale:-1 1;' : ''}`} />
+      ))}
+      <!-- La chapa de maracuyá tirada abajo, entre botella y botón, cortada por el rasgado. -->
+      <BaseCap class="fill__cube fill__cap" flavor={FLAVORS.find(({ id }) => id === 'maracuya')!} data-ice data-rotation="14" style="--x:67%;--y:97%;--mx:24%;--my:97%" />
+    </div>
+
+    <div class="fill__bottle-slot" data-reduced-slot data-chapter="1" data-fill="1" data-sweat="1" aria-hidden="true"></div>
+  </div>
+</section>

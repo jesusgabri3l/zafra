@@ -1,0 +1,52 @@
+@use '../abstracts' as *;
+
+// Colores por contenedor: --button-bg / --button-ink (la navbar los cambia según el capítulo).
+.button {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 12px 24px;
+  border-radius: 999px;
+  background: var(--button-bg, var(--maracuya));
+  color: var(--button-ink, var(--tinta));
+  text-decoration: none;
+  @include label-font(14px);
+
+  &__arrow {
+    transition: translate 200ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  &:hover &__arrow,
+  &:focus-visible &__arrow {
+    translate: 3px 0;
+  }
+
+  &--small {
+    min-height: 36px;
+    padding: 8px 16px;
+    font-size: 13px;
+
+    @include from-tablet {
+      min-height: 40px;
+    }
+  }
+
+  &--large {
+    min-height: 64px;
+    padding: 20px 32px;
+    font-size: 16px;
+  }
+
+  &[aria-disabled='true'] {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  @include reduced-motion {
+    &__arrow {
+      transition: none;
+    }
+  }
+}
