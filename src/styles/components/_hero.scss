@@ -142,7 +142,7 @@
   }
 }
 
-html:not([data-ready]) .hero__content,
+html:not([data-ready]) .hero__title,
 html:not([data-ready]) .hero__note,
 html:not([data-ready]) .hero__fruit {
   visibility: hidden;

@@ -20,8 +20,15 @@ export async function startIntro(prepare: () => void) {
   const strokes = [...document.querySelectorAll<HTMLElement>('[data-hero-stroke]')];
   const painted = new Promise<void>((resolve) => (reduced || !brush ? resolve() : void gsap.to(strokes, { '--p': 1, duration: 0.7, ease: 'power1.inOut', stagger: 0.22, onComplete: resolve })));
 
-  const tasks = [document.fonts.ready, ...[...document.querySelectorAll<HTMLImageElement>('img[data-preload]')].map((image) => image.decode().catch(() => undefined)), painted];
+  const whole = document.querySelector<HTMLImageElement>('[data-whole]');
+  const decodeLater = [...document.querySelectorAll<HTMLImageElement>('.hero__fruit img.fruit:not([data-whole])')];
+  for (const image of decodeLater) void image.decode().catch(() => undefined);
+
+  const tasks = [document.fonts.ready, painted];
+  if (whole) tasks.push(whole.decode().catch(() => undefined));
   await Promise.race([Promise.all(tasks), new Promise((resolve) => setTimeout(resolve, TIMEOUT))]);
+
+  root.setAttribute('data-ready', ''); // kicker + brochazos; el titular y la fruta siguen ocultos hasta la intro
 
   const idle = window.requestIdleCallback ?? ((cb: () => void) => setTimeout(cb, 800));
   idle(() => {
@@ -30,11 +37,8 @@ export async function startIntro(prepare: () => void) {
     }
   });
 
-  prepare();
-  root.setAttribute('data-ready', ''); // el titular y la fruta ya se pueden mostrar
-
   const V = document.querySelector<HTMLElement>('.hero')!.offsetHeight;
-  const whole = document.querySelector('[data-whole]')!;
+  const wholeEl = document.querySelector('[data-whole]')!;
   const halves = [...document.querySelectorAll<HTMLElement>('[data-half]')];
   const drops = [...document.querySelectorAll<HTMLElement>('[data-drop]')];
   const letters = [...document.querySelectorAll('.hero__title [data-char]')];
@@ -57,8 +61,8 @@ export async function startIntro(prepare: () => void) {
   tl.call(() => bumpBottle(true), [], 0.45); // aterriza en la cresta
 
   // La maracuyá entera cae, choca con la cresta y se parte. Solo posición, giro y escala: nunca opacidad.
-  tl.fromTo(whole, { y: -V * 0.9, rotation: -30, visibility: 'hidden' }, { y: 0, rotation: 0, visibility: 'visible', duration: 0.5, ease: 'back.out(1.2)' }, 0.5);
-  tl.fromTo(whole, { visibility: 'visible' }, { visibility: 'hidden', duration: 0.001, immediateRender: false }, splitAt);
+  tl.fromTo(wholeEl, { y: -V * 0.9, rotation: -30, visibility: 'hidden' }, { y: 0, rotation: 0, visibility: 'visible', duration: 0.5, ease: 'back.out(1.2)' }, 0.5);
+  tl.fromTo(wholeEl, { visibility: 'visible' }, { visibility: 'hidden', duration: 0.001, immediateRender: false }, splitAt);
   halves.forEach((half) => {
     const direction = Number(half.dataset.half);
     const anchor = { xPercent: direction < 0 ? -100 : 0, yPercent: -30 }; // la mitad izquierda se apoya en el centro por su borde derecho

@@ -57,6 +57,20 @@ const scatter = (index: number, spread: number) => ({
   rotation: (((index * 43) % 29) / 14 - 1) * 40,
 });
 
+/** Posición de la botella en el hero (scroll 0). Liviano: no arma el timeline. */
+export function syncHeroStage() {
+  const V = query<HTMLElement>('.hero').offsetHeight;
+  const vw = document.documentElement.clientWidth;
+  const mobile = vw < 768;
+  const tablet = !mobile && vw < 1100;
+  const heroHeight = V * (mobile ? 0.4 : tablet ? 0.46 : 0.66);
+  const crestY = V * 0.84;
+  const heroX = vw * (mobile ? 0.74 : tablet ? 0.86 : 0.84);
+  const cantoDrop = (heroX - vw * 0.84) * -Math.tan((4 * Math.PI) / 180);
+  const heroY = crestY + cantoDrop - heroHeight * 0.48;
+  gsap.set(stage, { x: heroX, y: heroY, height: heroHeight, rotZ: 0, fill: 1, sweat: 0, chapter: 2, flavorA: 0, flavorB: 0, mix: 0, follow: 0, orderZone: 0, floating: 0 });
+}
+
 export function startStory(onScroll: (scrollY: number) => void) {
   let context: gsap.Context | undefined;
   let timeline: gsap.core.Timeline | undefined;
@@ -82,23 +96,23 @@ export function startStory(onScroll: (scrollY: number) => void) {
 }
 
 function buildTimeline() {
-  const V = query<HTMLElement>('.hero').offsetHeight; // alto de pantalla (100svh)
+  syncHeroStage();
+  const V = query<HTMLElement>('.hero').offsetHeight;
   const vw = document.documentElement.clientWidth;
   const mobile = vw < 768;
-  const tablet = !mobile && vw < 1100; // la botella 0.66 V no cabe junto al titular: más chica y más a la izquierda
-  const heroHeight = V * (mobile ? 0.4 : tablet ? 0.46 : 0.66); // más grande: la botella manda en el hero
+  const tablet = !mobile && vw < 1100;
+  const heroHeight = V * (mobile ? 0.4 : tablet ? 0.46 : 0.66);
   const centerHeight = V * (mobile ? 0.38 : tablet ? 0.5 : 0.64);
-  const crestY = V * 0.84; // el canto del brochazo de A (-4°) está al 84svh en x = 84vw (HomeManifesto.astro)
-  const heroX = vw * (mobile ? 0.74 : tablet ? 0.86 : 0.84); // a la derecha de "VERDAD": nunca la tapa
-  const cantoDrop = (heroX - vw * 0.84) * -Math.tan((4 * Math.PI) / 180); // el canto sube hacia la derecha
-  const heroY = crestY + cantoDrop - heroHeight * 0.48; // la base de la botella toca el canto
-  const centerY = V * (mobile ? 0.77 : 0.5); // en móvil la botella va debajo del titular y las pastillas de B
-  const betaX = vw * (mobile ? 0.7 : 0.8); // en B la botella va a la derecha del titular
-  const tableY = V * (mobile ? 0.88 : 0.84) - heroHeight * 0.48; // la base de la botella apoya en la mesa de A
-  const leanRotation = -(12 * Math.PI) / 180; // inclinación antes de cada viaje
+  const crestY = V * 0.84;
+  const heroX = vw * (mobile ? 0.74 : tablet ? 0.86 : 0.84);
+  const cantoDrop = (heroX - vw * 0.84) * -Math.tan((4 * Math.PI) / 180);
+  const heroY = crestY + cantoDrop - heroHeight * 0.48;
+  const centerY = V * (mobile ? 0.77 : 0.5);
+  const betaX = vw * (mobile ? 0.7 : 0.8);
+  const tableY = V * (mobile ? 0.88 : 0.84) - heroHeight * 0.48;
+  const leanRotation = -(12 * Math.PI) / 180;
 
   const tl = gsap.timeline({ paused: true, defaults: { ease: 'none' } });
-  gsap.set(stage, { x: heroX, y: heroY, height: heroHeight, rotZ: 0, fill: 1, sweat: 0, chapter: 2, flavorA: 0, flavorB: 0, mix: 0, follow: 0, orderZone: 0, floating: 0 });
 
   const manifesto = query<HTMLElement>('.manifesto');
   const hero = query<HTMLElement>('.hero');

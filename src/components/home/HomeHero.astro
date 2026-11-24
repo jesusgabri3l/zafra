@@ -32,10 +32,10 @@ const drops = [
   <div class="hero__fruit" aria-hidden="true">
     <div class="hero__fruit-box" data-fruit-box>
       <BaseFruit class="hero__whole" name="maracuya-entera" width={170} preload data-whole />
-      <BaseFruit class="hero__half hero__half--1" name="maracuya-mitad-1" width={170} preload data-half="-1" />
-      <BaseFruit class="hero__half hero__half--2" name="maracuya-mitad-2" width={155} preload data-half="1" />
+      <BaseFruit class="hero__half hero__half--1" name="maracuya-mitad-1" width={170} data-half="-1" />
+      <BaseFruit class="hero__half hero__half--2" name="maracuya-mitad-2" width={155} data-half="1" />
       {drops.map(({ name, angle, distance, width }) => (
-        <BaseFruit class="hero__drop" name={name} width={width} preload data-drop data-angle={angle} data-distance={distance} />
+        <BaseFruit class="hero__drop" name={name} width={width} data-drop data-angle={angle} data-distance={distance} />
       ))}
     </div>
   </div>

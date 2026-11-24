@@ -6,38 +6,48 @@ import { startBottle } from './bottle';
 import { startOrder } from './order';
 import { startNotes } from './notes';
 import { startSpout } from './spout';
-import { startStory } from './story';
+import { startStory, syncHeroStage } from './story';
 import { startReducedBottle } from './reduced';
 import { startIntro } from './intro';
 import { prefersReducedMotion } from './motion';
 import { trackSections } from './analytics';
 
 gsap.registerPlugin(ScrollTrigger);
-ScrollTrigger.config({ ignoreMobileResize: true }); // la barra de direcciones de iOS no debe recalcular todo
+ScrollTrigger.config({ ignoreMobileResize: true });
 
 const reduced = prefersReducedMotion();
+const spout = startSpout();
+let story: ReturnType<typeof startStory> | undefined;
+let scrollReady = false;
 
 trackSections();
-startSmoothScroll();
 startBottle();
 startNavbarTone();
-startOrder();
-startNotes();
 
-const spout = startSpout();
-const story = reduced ? undefined : startStory(spout.setScroll);
 if (reduced) startReducedBottle();
+else syncHeroStage();
 
 const layoutPage = () => {
   spout.layout();
-  story?.build();
+  if (!reduced) {
+    story ??= startStory(spout.setScroll);
+    story.build();
+    if (!scrollReady) {
+      startSmoothScroll();
+      scrollReady = true;
+    }
+  }
   ScrollTrigger.refresh();
 };
 
-// La intro arma el layout (con fuentes y frutas ya cargadas) justo antes de arrancar.
 void startIntro(layoutPage);
 
-// El timeline mide el layout: se reconstruye al cambiar el ancho (o el alto en más de 120 px: en iOS la barra de direcciones lo mueve).
+const idle = window.requestIdleCallback ?? ((cb: () => void) => setTimeout(cb, 1200));
+idle(() => {
+  startOrder();
+  startNotes();
+});
+
 let lastWidth = window.innerWidth;
 let lastHeight = window.innerHeight;
 let resizeTimer: number | undefined;
@@ -47,6 +57,7 @@ window.addEventListener('resize', () => {
     if (window.innerWidth === lastWidth && Math.abs(window.innerHeight - lastHeight) <= 120) return;
     lastWidth = window.innerWidth;
     lastHeight = window.innerHeight;
+    if (!reduced) syncHeroStage();
     layoutPage();
   }, 200);
 });
