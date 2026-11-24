@@ -143,8 +143,9 @@
       width: clamp(180px, 22vw, 280px);
     }
 
+    html[data-ready] &,
     html:not([data-loading]) & {
-      display: none;
+      display: none; // placeholder solo antes de que arranque la intro en canvas
     }
   }
 

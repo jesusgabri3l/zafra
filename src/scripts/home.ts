@@ -16,8 +16,9 @@ let scrollReady = false;
 trackSections();
 startBottle();
 
+const skipIntro = document.documentElement.hasAttribute('data-skip-intro') || window.scrollY > 64;
 if (reduced) startReducedBottle();
-else syncHeroStage();
+else if (!skipIntro) syncHeroStage();
 
 function ensureStory() {
   if (story) return Promise.resolve();

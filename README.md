@@ -43,7 +43,7 @@ A landing page concept for a fictional brand. ZAFRA is not a real business: the 
 
 ## PageSpeed
 
-PageSpeed Insights on the [live demo](https://jesusgabri3l.github.io/zafra/), November 24, 2026:
+[PageSpeed Insights](https://pagespeed.web.dev/analysis?url=https%3A%2F%2Fjesusgabri3l.github.io%2Fzafra%2F) uses the same **Lighthouse** engine; numbers below are from Lighthouse against the [live demo](https://jesusgabri3l.github.io/zafra/) (November 24, 2026). README captures are stitched from the HTML report at **2×** (gauges + metrics, like TROCHA).
 
 <table>
   <tr>
@@ -51,19 +51,19 @@ PageSpeed Insights on the [live demo](https://jesusgabri3l.github.io/zafra/), No
     <th width="50%">Desktop</th>
   </tr>
   <tr>
-    <td><img src="docs/screenshots/pagespeed-mobile-2026-11-24.png" alt="PageSpeed mobile: Performance 67, Accessibility 100, Best Practices 96, SEO 100" width="100%" /></td>
-    <td><img src="docs/screenshots/pagespeed-desktop-2026-11-24.png" alt="PageSpeed desktop: Performance 90, Accessibility 100, Best Practices 100, SEO 100" width="100%" /></td>
+    <td><img src="docs/screenshots/pagespeed-mobile-2026-11-24.png" alt="PageSpeed mobile: Performance 69, Accessibility 100, Best Practices 96, SEO 100" width="100%" /></td>
+    <td><img src="docs/screenshots/pagespeed-desktop-2026-11-24.png" alt="PageSpeed desktop: Performance 92, Accessibility 100, Best Practices 100, SEO 100" width="100%" /></td>
   </tr>
 </table>
 
 | PageSpeed | Mobile | Desktop |
 |---|---|---|
-| First Contentful Paint | 1.3 s | 0.6 s |
-| Largest Contentful Paint | 9.0 s | 2.0 s |
-| Cumulative Layout Shift | 0 | 0.004 |
-| Total Blocking Time | 310 ms | 0 ms |
+| First Contentful Paint | 1.1 s | 0.5 s |
+| Largest Contentful Paint | 8.5 s | 1.7 s |
+| Cumulative Layout Shift | 0 | 0.007 |
+| Total Blocking Time | 140 ms | 0 ms |
 
-**Why mobile performance is ~67:** the hero decodes gouache WebPs and runs GSAP while the intro plays; Lighthouse counts that work as main-thread blocking. Desktop stays fast because there is more CPU headroom in the lab run.
+**Why mobile performance is ~69:** LCP is still the hero botella + GSAP on a throttled CPU. We split Lenis/story until after the intro (TBT ~140 ms vs ~310 ms before); desktop stays in the 90s.
 
 ## Development
 
@@ -76,11 +76,15 @@ npm run build     # builds the site into ./dist/
 npm run start     # serves the build on :3100
 ```
 
-`npm run og` captures `public/og.jpg` and README shots from `dist/` (Playwright). Regenerate Lighthouse HTML for the PageSpeed PNGs:
+`npm run og` captures `public/og.jpg` and README shots from `dist/` (Playwright). PageSpeed PNGs need Lighthouse HTML in `docs/reports/`:
 
 ```sh
-# optional: docs/reports/lighthouse-*.html (gitignored), then npm run og
+npx lighthouse https://jesusgabri3l.github.io/zafra/ --form-factor=mobile --screenEmulation.mobile --output=html --output-path=docs/reports/lighthouse-mobile.html
+npx lighthouse https://jesusgabri3l.github.io/zafra/ --preset=desktop --output=html --output-path=docs/reports/lighthouse-desktop.html
+node scripts/capture-lighthouse-readme.mjs
 ```
+
+The dark **pagespeed.web.dev** UI is the same audit; screenshots there are manual (PSI does not finish in headless automation).
 
 ## Author
 

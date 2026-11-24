@@ -11,7 +11,19 @@ const TIMEOUT = 10_000; // red caída o lenta: sale igual con lo que haya
 export async function startIntro(prepare: () => void) {
   const root = document.documentElement;
   const reduced = prefersReducedMotion();
-  history.scrollRestoration = 'manual'; // el recorrido arranca siempre desde la portada
+  const skipIntro = root.hasAttribute('data-skip-intro') || (!reduced && window.scrollY > 64);
+  if (skipIntro) root.setAttribute('data-skip-intro', '');
+  history.scrollRestoration = 'manual';
+
+  if (skipIntro) {
+    root.setAttribute('data-ready', '');
+    intro.active = false;
+    root.removeAttribute('data-loading');
+    setScrollLocked(false);
+    prepare();
+    return;
+  }
+
   window.scrollTo(0, 0);
   setScrollLocked(true);
 

@@ -24,6 +24,6 @@
   }
 }
 
-html:not([data-ready]) .pass .manifesto {
-  visibility: hidden; // hasta que story.ts la deje fuera de pantalla
+html[data-loading] .pass .manifesto {
+  visibility: hidden; // no asomar A durante la intro ni mientras arma el recorrido
 }
