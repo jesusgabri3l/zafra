@@ -71,15 +71,6 @@ const jsonLd = JSON.stringify({
     <style set:html={`:root{--img-papel:url(${base}/img/papel.webp);--img-papel-sombra:url(${base}/img/papel-sombra.webp);--img-brochazo:url(${base}/img/brochazo.webp)}`} />
   </head>
   <body>
-    <script is:inline>
-      // Antes del primer pintado útil: si recargaste a mitad del recorrido, no fuerces portada ni intro.
-      const root = document.documentElement;
-      if (root.classList.contains('is-scrub')) {
-        const y = window.scrollY;
-        if (y > 64) root.setAttribute('data-skip-intro', '');
-        else window.scrollTo(0, 0);
-      }
-    </script>
     <a class="skip-link" href="#contenido">Saltar al contenido</a>
     <slot />
   </body>

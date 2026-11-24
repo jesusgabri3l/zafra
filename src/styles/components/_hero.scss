@@ -127,28 +127,6 @@
     }
   }
 
-  // Placeholder de LCP (HTML); la pila JS la sustituye al terminar la intro.
-  &__lcp-bottle {
-    position: absolute;
-    top: 42svh;
-    right: 6%;
-    width: min(42vw, 220px);
-    height: auto;
-    pointer-events: none;
-    z-index: 0;
-
-    @include from-tablet {
-      top: 12svh;
-      right: 10%;
-      width: clamp(180px, 22vw, 280px);
-    }
-
-    html[data-ready] &,
-    html:not([data-loading]) & {
-      display: none; // placeholder solo antes de que arranque la intro en canvas
-    }
-  }
-
   // Hueco de la botella solo en movimiento reducido (con scroll la mueve el timeline).
   &__bottle-slot {
     position: absolute;
@@ -164,7 +142,7 @@
   }
 }
 
-html:not([data-ready]) .hero__title,
+html:not([data-ready]) .hero__content,
 html:not([data-ready]) .hero__note,
 html:not([data-ready]) .hero__fruit {
   visibility: hidden;

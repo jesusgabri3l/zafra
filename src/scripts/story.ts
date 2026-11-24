@@ -2,8 +2,6 @@ import { gsap } from 'gsap';
 import { bumpBottle, stage } from './bottle';
 import { syncHeroStage } from './hero-stage';
 
-export { syncHeroStage } from './hero-stage';
-
 // El recorrido es UN timeline cuyo tiempo es el scroll en píxeles (time = scrollY). Las secciones fijas son `position: sticky`,
 // así las posiciones salen del layout. Se reconstruye al cambiar el tamaño. Cada propiedad de `stage` la toca una secuencia de
 // tramos que no se pisan; todos menos el primero llevan immediateRender: false. La fruta nunca cambia de opacidad.

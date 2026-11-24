@@ -16,9 +16,8 @@ let scrollReady = false;
 trackSections();
 startBottle();
 
-const skipIntro = document.documentElement.hasAttribute('data-skip-intro') || window.scrollY > 64;
 if (reduced) startReducedBottle();
-else if (!skipIntro) syncHeroStage();
+else syncHeroStage();
 
 function ensureStory() {
   if (story) return Promise.resolve();
@@ -42,6 +41,7 @@ const layoutPage = () => {
     if (!reduced) {
       await ensureStory();
       story!.build();
+      document.documentElement.setAttribute('data-story', '');
       if (!scrollReady) {
         const [{ startSmoothScroll }, { startNavbarTone }] = await Promise.all([import('./smooth-scroll'), import('./navbar-tone')]);
         startSmoothScroll();
@@ -61,6 +61,7 @@ void startIntro(layoutPage);
 
 const idle = window.requestIdleCallback ?? ((cb: () => void) => setTimeout(cb, 1200));
 idle(() => {
+  if (!reduced) void import('./story'); // solo descarga: al terminar la intro el recorrido se arma sin esperar la red
   void import('./order').then(({ startOrder }) => startOrder());
   void import('./notes').then(({ startNotes }) => startNotes());
 });
@@ -74,7 +75,6 @@ window.addEventListener('resize', () => {
     if (window.innerWidth === lastWidth && Math.abs(window.innerHeight - lastHeight) <= 120) return;
     lastWidth = window.innerWidth;
     lastHeight = window.innerHeight;
-    if (!reduced) syncHeroStage();
     layoutPage();
   }, 200);
 });

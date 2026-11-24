@@ -38,12 +38,11 @@ A landing page concept for a fictional brand. ZAFRA is not a real business: the 
 - **One paused timeline.** `story.ts` maps `window.scrollY` to `timeline.time()`. Sticky sections keep measurements honest; bottle poses do not fight (`immediateRender: false` on every handoff).
 - **2D bottle, not 3D.** Three gouache WebPs (maracuyá, mora, lulo) with CSS transforms, a contact shadow and flavor crossfade—no WebGL.
 - **Paper world.** `BaseStroke` paints brush strokes with a mask; `BaseTear` is a deterministic noisy edge. All art ships as WebP under `public/`.
-- **`BASE_PATH` safe.** CSS backgrounds use `--img-*` from `BaseLayout`; Astro uses `import.meta.env.BASE_URL` so `/zafra/` on Pages works.
 - **Accessible.** Skip link, `aria-labelledby` sections, live region on the order form, and with *reduce motion* the page stacks sections without the scroll film.
 
 ## PageSpeed
 
-[PageSpeed Insights](https://pagespeed.web.dev/analysis?url=https%3A%2F%2Fjesusgabri3l.github.io%2Fzafra%2F) uses the same **Lighthouse** engine; numbers below are from Lighthouse against the [live demo](https://jesusgabri3l.github.io/zafra/) (November 24, 2026). README captures are stitched from the HTML report at **2×** (gauges + metrics, like TROCHA).
+PageSpeed Insights on the [live demo](https://jesusgabri3l.github.io/zafra/), November 24, 2026:
 
 <table>
   <tr>
@@ -63,8 +62,6 @@ A landing page concept for a fictional brand. ZAFRA is not a real business: the 
 | Cumulative Layout Shift | 0 | 0.007 |
 | Total Blocking Time | 140 ms | 0 ms |
 
-**Why mobile performance is ~69:** LCP is still the hero botella + GSAP on a throttled CPU. We split Lenis/story until after the intro (TBT ~140 ms vs ~310 ms before); desktop stays in the 90s.
-
 ## Development
 
 Requires Node 22 or later (24 in CI).
@@ -73,18 +70,8 @@ Requires Node 22 or later (24 in CI).
 npm install
 npm run dev       # local server at http://localhost:4321
 npm run build     # builds the site into ./dist/
-npm run start     # serves the build on :3100
+npm run preview   # serves the build locally
 ```
-
-`npm run og` captures `public/og.jpg` and README shots from `dist/` (Playwright). PageSpeed PNGs need Lighthouse HTML in `docs/reports/`:
-
-```sh
-npx lighthouse https://jesusgabri3l.github.io/zafra/ --form-factor=mobile --screenEmulation.mobile --output=html --output-path=docs/reports/lighthouse-mobile.html
-npx lighthouse https://jesusgabri3l.github.io/zafra/ --preset=desktop --output=html --output-path=docs/reports/lighthouse-desktop.html
-node scripts/capture-lighthouse-readme.mjs
-```
-
-The dark **pagespeed.web.dev** UI is the same audit; screenshots there are manual (PSI does not finish in headless automation).
 
 ## Author
 

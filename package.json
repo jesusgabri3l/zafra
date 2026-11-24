@@ -11,7 +11,6 @@
     "preview": "astro preview",
     "start": "astro preview --host --port 3100",
     "og": "node scripts/build-og.mjs",
-    "pagespeed:shots": "node scripts/capture-lighthouse-readme.mjs",
     "astro": "astro"
   },
   "dependencies": {

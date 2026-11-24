@@ -24,6 +24,6 @@
   }
 }
 
-html[data-loading] .pass .manifesto {
-  visibility: hidden; // no asomar A durante la intro ni mientras arma el recorrido
+.is-scrub:not([data-story]) .pass .manifesto {
+  visibility: hidden; // hasta que story.ts la deje fuera de pantalla (se arma al terminar la intro)
 }

@@ -35,7 +35,10 @@ $tear-lip: 14px; // espacio para el filo crema y la sombra encima de la hoja
 // $fiber: false = borde de la hoja; true = el mismo borde subido 2-8 px (el filo crema).
 // El filo crema termina 2px antes del fondo: si llegara al borde, su fila fraccionaria asomaría bajo la hoja (línea crema).
 @function tear-polygon($fiber) {
-  $base: if($fiber, 'calc(100% - 2px)', '100%');
+  $base: '100%';
+  @if $fiber {
+    $base: 'calc(100% - 2px)';
+  }
   $points: '0% #{$base}';
   @for $i from 0 through $tear-steps {
     $y: 'calc(#{$tear-lip} + var(--tear) * #{math.div(math.round(tear-k($i) * 1000), 1000)}';

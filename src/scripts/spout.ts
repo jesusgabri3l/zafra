@@ -60,6 +60,17 @@ export function startSpout() {
   const text = svg?.querySelector<SVGTextPathElement>('[data-spout-text]');
   if (!svg || !bands || !shadow || !clip || !path || !text) return { layout() {}, setScroll(_pixels: number) {} };
 
+  // El grano carga al acercarse: una <image> dentro de <pattern> la cuenta Chrome como LCP falso (rect 0x0, pintada tras la intro).
+  const grain = svg.querySelector<SVGImageElement>('image[data-href]');
+  if (grain) {
+    const loadGrain = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return;
+      grain.setAttribute('href', grain.dataset.href!);
+      loadGrain.disconnect();
+    }, { rootMargin: '100% 0px' });
+    loadGrain.observe(svg);
+  }
+
   let unit = 1;
   let scrollShift = 0;
   let drift = 0;
