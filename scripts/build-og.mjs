@@ -1,25 +1,29 @@
-// OG 1200×630 + capturas README desde el build estático (Playwright).
+// OG 1200×630 + capturas README (desktop + móvil) + PNG PageSpeed desde reportes Lighthouse.
 // Uso: npm run build && npm run og && npm run build
 import { spawn } from 'node:child_process';
-import { existsSync, mkdirSync, readdirSync } from 'node:fs';
+import { existsSync, mkdirSync, readdirSync, unlinkSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
+import { pathToFileURL } from 'node:url';
 import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
 import { chromium } from 'playwright-core';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const docsDir = join(root, 'docs', 'screenshots');
+const reportsDir = join(root, 'docs', 'reports');
+const stamp = '2026-11-24';
 const outOg = join(root, 'public', 'og.jpg');
 const port = 3198;
 const base = `http://127.0.0.1:${port}`;
-const VIEW = { width: 1200, height: 630 };
 
-/** Momentos para el README: selector y archivo (sin extensión). */
-const SHOTS = [
-  { selector: '.hero', file: 'hero-v2', crop: null },
-  { selector: '.manifesto', file: 'manifesto-v2', crop: { w: 1200, h: 900 } },
-  { selector: '.flavors', file: 'flavors-v2', crop: { w: 1200, h: 900 } },
-  { selector: '.order', file: 'order-v2', crop: { w: 1200, h: 900 } },
+const DESKTOP = { width: 1440, height: 900 };
+const MOBILE = { width: 390, height: 844 };
+
+/** Vista completa en móvil (viewport), no recorte de elemento sticky. */
+const MOBILE_VIEWS = [
+  { name: `mobile-hero-${stamp}`, scroll: async (page) => page.evaluate(() => scrollTo(0, 0)) },
+  { name: `mobile-fill-${stamp}`, scroll: async (page) => page.locator('.fill').first().scrollIntoViewIfNeeded() },
+  { name: `mobile-order-${stamp}`, scroll: async (page) => page.locator('#pedido').scrollIntoViewIfNeeded() },
 ];
 
 function findChromium() {
@@ -65,10 +69,30 @@ async function waitHeroReady(page) {
   await page.waitForTimeout(500);
 }
 
-async function toWebp(buf, target, crop) {
-  let pipe = sharp(buf);
-  if (crop) pipe = pipe.resize(crop.w, crop.h, { fit: 'cover', position: 'centre' });
-  await pipe.webp({ quality: 88 }).toFile(`${target}.webp`);
+async function capturePageSpeed(executablePath) {
+  const pairs = [
+    ['lighthouse-mobile.html', `pagespeed-mobile-${stamp}.png`],
+    ['lighthouse-desktop.html', `pagespeed-desktop-${stamp}.png`],
+  ];
+  const browser = await chromium.launch({ executablePath });
+  try {
+    for (const [report, out] of pairs) {
+      const file = join(reportsDir, report);
+      if (!existsSync(file)) {
+        console.warn(`skip PageSpeed PNG (falta ${report}; corre lighthouse sobre la URL live)`);
+        continue;
+      }
+      const page = await browser.newPage({ viewport: { width: 412, height: 900 } });
+      await page.goto(pathToFileURL(file).href, { waitUntil: 'networkidle' });
+      const header = page.locator('.lh-scores-header');
+      await header.waitFor({ timeout: 15_000 });
+      await header.screenshot({ path: join(docsDir, out), type: 'png' });
+      console.log(join(docsDir, out));
+      await page.close();
+    }
+  } finally {
+    await browser.close();
+  }
 }
 
 async function main() {
@@ -82,29 +106,56 @@ async function main() {
 
   mkdirSync(join(root, 'public'), { recursive: true });
   mkdirSync(docsDir, { recursive: true });
+  mkdirSync(reportsDir, { recursive: true });
+
+  for (const legacy of readdirSync(docsDir).filter((name) => name.endsWith('-v2.webp'))) {
+    unlinkSync(join(docsDir, legacy));
+  }
 
   const server = serve();
   const browser = await chromium.launch({ executablePath });
   let context;
   try {
     await waitForServer();
-    context = await browser.newContext({ viewport: VIEW, deviceScaleFactor: 2 });
-    const page = await context.newPage();
 
+    // OG + hero escritorio (misma vista ancha)
+    context = await browser.newContext({ viewport: DESKTOP, deviceScaleFactor: 1 });
+    let page = await context.newPage();
     await waitHeroReady(page);
-
     const heroPng = await page.screenshot({ type: 'png' });
     await sharp(heroPng).resize(1200, 630, { fit: 'cover', position: 'centre' }).jpeg({ quality: 88, mozjpeg: true }).toFile(outOg);
-    console.log(outOg, '1200×630 (hero)');
+    await sharp(heroPng).jpeg({ quality: 90, mozjpeg: true }).toFile(join(docsDir, `desktop-hero-${stamp}.jpg`));
+    console.log(outOg);
+    console.log(join(docsDir, `desktop-hero-${stamp}.jpg`));
 
-    for (const { selector, file, crop } of SHOTS) {
-      const el = page.locator(selector).first();
-      await el.scrollIntoViewIfNeeded({ timeout: 15_000 });
-      await page.waitForTimeout(600);
-      const png = await el.screenshot({ type: 'png' });
-      await toWebp(png, join(docsDir, file), crop);
-      console.log(join(docsDir, `${file}.webp`));
+    await page.locator('.order').first().scrollIntoViewIfNeeded();
+    await page.waitForTimeout(700);
+    await sharp(await page.screenshot({ type: 'png', fullPage: false }))
+      .jpeg({ quality: 90, mozjpeg: true })
+      .toFile(join(docsDir, `desktop-order-${stamp}.jpg`));
+    console.log(join(docsDir, `desktop-order-${stamp}.jpg`));
+    await context.close();
+
+    // Móvil
+    context = await browser.newContext({
+      viewport: MOBILE,
+      deviceScaleFactor: 2,
+      isMobile: true,
+      hasTouch: true,
+    });
+    page = await context.newPage();
+    await waitHeroReady(page);
+    for (const { name, scroll } of MOBILE_VIEWS) {
+      await scroll(page);
+      await page.waitForTimeout(700);
+      await sharp(await page.screenshot({ type: 'png' }))
+        .jpeg({ quality: 90, mozjpeg: true })
+        .toFile(join(docsDir, `${name}.jpg`));
+      console.log(join(docsDir, `${name}.jpg`));
     }
+    await context.close();
+
+    await capturePageSpeed(executablePath);
   } finally {
     await context?.close().catch(() => undefined);
     await browser.close().catch(() => undefined);

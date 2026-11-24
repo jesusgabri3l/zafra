@@ -1,84 +1,89 @@
 <div align="center">
 
-# ZAFRA · A scroll-driven fruit soda landing
+# ZAFRA · A landing page for a fruit soda brand
 
-**One scroll timeline, one 2D gouache bottle.**
-A concept site for a fictional Colombian panela soda (maracuyá, mora, lulo): horizontal hero→manifesto, paper tears, flavor zigzag, and a WhatsApp six-pack builder.
+**One scroll timeline, one 2D bottle.**
+A concept site for a fictional Colombian panela soda (maracuyá, mora, lulo): horizontal hero→manifesto, paper tears, a flavor zigzag, and a WhatsApp six-pack builder.
 
 [**Visit the demo →**](https://jesusgabri3l.github.io/zafra/)
 
 <br />
 
-<img src="docs/screenshots/hero-v2.webp" alt="ZAFRA hero: yellow maracuyá field, gouache brush strokes, title Fruta de Verdad and a sweating bottle" width="100%" />
+<img src="docs/screenshots/desktop-hero-2026-11-24.jpg" alt="ZAFRA hero on desktop: FRUTA DE VERDAD over yellow gouache brush strokes, maracuyá and a sweating bottle" width="100%" />
 
 </div>
 
+## Overview
+
+A landing page concept for a fictional brand. ZAFRA is not a real business: the name, flavors, prices and WhatsApp number are made up.
+
 <table>
   <tr>
-    <td align="center" width="33%"><img src="docs/screenshots/manifesto-v2.webp" alt="Manifiesto: cream card with the panela recipe" width="100%" /><br /><sub>A · Manifiesto</sub></td>
-    <td align="center" width="33%"><img src="docs/screenshots/flavors-v2.webp" alt="Sabores zigzag with postals and gouache fruit" width="100%" /><br /><sub>C · Sabores</sub></td>
-    <td align="center" width="33%"><img src="docs/screenshots/order-v2.webp" alt="Six-pack builder and WhatsApp order" width="100%" /><br /><sub>D · Pedido</sub></td>
+    <td align="center" width="33%"><img src="docs/screenshots/mobile-hero-2026-11-24.jpg" alt="Hero on a phone: SODA DE PANELA, FRUTA DE VERDAD and the maracuyá intro" width="100%" /><br /><sub>Hero</sub></td>
+    <td align="center" width="33%"><img src="docs/screenshots/mobile-fill-2026-11-24.jpg" alt="Fill on a phone: La más fría, ingredients and the spinning PRUÉBALA ring" width="100%" /><br /><sub>B · Fill</sub></td>
+    <td align="center" width="33%"><img src="docs/screenshots/mobile-order-2026-11-24.jpg" alt="Order on a phone: build a six-pack and WhatsApp button" width="100%" /><br /><sub>D · Order</sub></td>
   </tr>
 </table>
 
-## Overview
+- **Hero:** intro by time (no loader): letters bounce in, the bottle lands on the maracuyá, the fruit splits.
+- **A Manifiesto:** horizontal pass into a cream card; the nail cap pins the recipe (pulp + panela + bubbles).
+- **B Fill:** “La más fría” with ice cubes that fall on scroll.
+- **C Sabores:** zigzag MARACUYÁ → MORA → LULO, postals, one bottle that changes flavor with a 2D spin.
+- **D Pedido:** pick flavors, build a six-pack, open WhatsApp with the message filled in.
 
-ZAFRA is not a real brand: the WhatsApp number, prices and copy are made up. The point is the **scrollytelling mechanic** and the gouache art direction.
-
-| Section | What happens |
-|---|---|
-| **Hero** | Intro by time (no loader): letters bounce in, bottle drops on the maracuyá, fruit splits. |
-| **A Manifiesto** | Horizontal pass into a cream card; nail cap pins the recipe (pulp + panela + bubbles). |
-| **B Fill** | “La más fría” with ice cubes that fall on scroll. |
-| **C Sabores** | Zigzag MARACUYÁ → MORA → LULO, postals, one bottle changes flavor with a 2D spin. |
-| **D Pedido** | Pick flavors, build a six-pack, open WhatsApp. |
+<img src="docs/screenshots/desktop-order-2026-11-24.jpg" alt="Order on desktop: six-pack builder with flavor caps, counters and WhatsApp" width="100%" />
 
 ## How it's built
 
-**Astro 7** (static) · **GSAP** (single timeline = `scrollY`) · Lenis · Sass · TypeScript · GitHub Pages.
+**Astro 7** (static) · **GSAP** (one timeline = `scrollY`) · Lenis · Sass · TypeScript · GitHub Pages.
 
-- **One paused timeline.** `story.ts` maps `window.scrollY` to `timeline.time()`. Sticky sections keep layout measurements honest; bottle poses never fight each other (`immediateRender: false` on every handoff).
-- **2D bottle, not 3D.** Three gouache WebP frames (maracuyá, mora, lulo) with CSS transforms, contact shadow and flavor crossfade—no WebGL.
-- **Paper world.** `BaseStroke` mask-paints brush strokes; `BaseTear` is a deterministic noisy edge; PNG sources are all exported to WebP under `public/`.
-- **`BASE_PATH` safe.** CSS backgrounds use `--img-*` set in `BaseLayout`; Astro/TS use `import.meta.env.BASE_URL` so `/zafra/` on Pages works.
-- **Accessible.** Skip link, `aria-labelledby` sections, live region on the order form, `prefers-reduced-motion` stacks sections without the scroll film.
+- **One paused timeline.** `story.ts` maps `window.scrollY` to `timeline.time()`. Sticky sections keep measurements honest; bottle poses do not fight (`immediateRender: false` on every handoff).
+- **2D bottle, not 3D.** Three gouache WebPs (maracuyá, mora, lulo) with CSS transforms, a contact shadow and flavor crossfade—no WebGL.
+- **Paper world.** `BaseStroke` paints brush strokes with a mask; `BaseTear` is a deterministic noisy edge. All art ships as WebP under `public/`.
+- **`BASE_PATH` safe.** CSS backgrounds use `--img-*` from `BaseLayout`; Astro uses `import.meta.env.BASE_URL` so `/zafra/` on Pages works.
+- **Accessible.** Skip link, `aria-labelledby` sections, live region on the order form, and with *reduce motion* the page stacks sections without the scroll film.
+
+## PageSpeed
+
+PageSpeed Insights on the [live demo](https://jesusgabri3l.github.io/zafra/), November 24, 2026:
+
+<table>
+  <tr>
+    <th width="50%">Mobile</th>
+    <th width="50%">Desktop</th>
+  </tr>
+  <tr>
+    <td><img src="docs/screenshots/pagespeed-mobile-2026-11-24.png" alt="PageSpeed mobile: Performance 67, Accessibility 100, Best Practices 96, SEO 100" width="100%" /></td>
+    <td><img src="docs/screenshots/pagespeed-desktop-2026-11-24.png" alt="PageSpeed desktop: Performance 90, Accessibility 100, Best Practices 100, SEO 100" width="100%" /></td>
+  </tr>
+</table>
+
+| PageSpeed | Mobile | Desktop |
+|---|---|---|
+| First Contentful Paint | 1.3 s | 0.6 s |
+| Largest Contentful Paint | 9.0 s | 2.0 s |
+| Cumulative Layout Shift | 0 | 0.004 |
+| Total Blocking Time | 310 ms | 0 ms |
+
+**Why mobile performance is ~67:** the hero decodes gouache WebPs and runs GSAP while the intro plays; Lighthouse counts that work as main-thread blocking. Desktop stays fast because there is more CPU headroom in the lab run.
 
 ## Development
 
-Node 22+ (24 in CI). Requires `npm install`.
+Requires Node 22 or later (24 in CI).
 
 ```sh
-npm run dev       # http://localhost:4321
-npm run build     # ./dist/
-npm run start     # production build on :3100 (for Lighthouse)
+npm install
+npm run dev       # local server at http://localhost:4321
+npm run build     # builds the site into ./dist/
+npm run start     # serves the build on :3100
 ```
 
-Asset scripts (need local `fuentes/`, gitignored): `node scripts/export-fruit.mjs`, `node fuentes/exportar_botellas.mjs`. **Capturas / OG:** `npm run build && npm run og && npm run build` → `public/og.jpg` + `docs/screenshots/*-v2.webp`.
+`npm run og` captures `public/og.jpg` and README shots from `dist/` (Playwright). Regenerate Lighthouse HTML for the PageSpeed PNGs:
 
-## Structure
-
-```
-src/
-  views/HomeView.astro    # all sections + bottle stack
-  scripts/story.ts        # scroll timeline
-  scripts/bottle/         # 2D bottle stack
-  components/home|base|layout/
-  data/flavors.ts
-public/img|bottle/
+```sh
+# optional: docs/reports/lighthouse-*.html (gitignored), then npm run og
 ```
 
-Design and animation notes live in `design-brief.md` (local, not in the public repo).
+## Author
 
-## Analytics
-
-[GoatCounter](https://www.goatcounter.com) on the published build only (no cookies). Events:
-
-| Event | When |
-|---|---|
-| `scroll-hero` … `scroll-footer` | Each main section crosses ~35% visibility once |
-| `click-github` / `click-portfolio` | Footer credits (text + icon) |
-| `click-linkedin` | LinkedIn icon and column link |
-
-## Credits
-
-Design & development: [Jesús Gabriel](https://jesusgabriel.dev/) · Illustrations: AI-assisted gouache workflow (see repo prompts file).
+Jesús Ahumada — [Portfolio](https://jesusgabriel.dev/) · [LinkedIn](https://www.linkedin.com/in/jesus-ahumada) · [GitHub](https://github.com/jesusgabri3l)
